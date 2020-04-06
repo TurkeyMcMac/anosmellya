@@ -11,8 +11,8 @@ World::World(unsigned width, unsigned height, Random& random,
     , carn(width, height, 0.)
     , baby(width, height, 0.)
 {
-    for (unsigned x = 0; x < width; ++x) {
-        for (unsigned y = 0; y < height; ++y) {
+    for (unsigned y = 0; y < height; ++y) {
+        for (unsigned x = 0; x < width; ++x) {
             Animal an;
             if (animal_chance > random.generate(1.)) {
                 if (carn_chance > random.generate(1.)) {
@@ -21,7 +21,7 @@ World::World(unsigned width, unsigned height, Random& random,
                     an.be_herb();
                 }
                 an.pos = Vec2D(x, y);
-                an.mutate(random, 0.03);
+                an.mutate(random, 0.2);
             }
             animal.at(x, y) = an;
         }
@@ -42,8 +42,8 @@ static float flow(float a, float b, float portion) { return (b - a) * portion; }
 static void disperse(Grid<float>& grid, float portion)
 {
     // This flow is not completely symmetrical, but it's good enough.
-    for (unsigned x = 0; x < grid.get_width(); ++x) {
-        for (unsigned y = 0; y < grid.get_height(); ++y) {
+    for (unsigned y = 0; y < grid.get_height(); ++y) {
+        for (unsigned x = 0; x < grid.get_width(); ++x) {
             float& here = grid.at(x, y);
             float& right = grid.at_small_trans(x, y, 1, 0);
             float& below = grid.at_small_trans(x, y, 0, 1);
@@ -60,8 +60,8 @@ static void disperse(Grid<float>& grid, float portion)
 static void evaporate(Grid<float>& grid, float portion)
 {
     float keep = 1. - portion;
-    for (unsigned x = 0; x < grid.get_width(); ++x) {
-        for (unsigned y = 0; y < grid.get_height(); ++y) {
+    for (unsigned y = 0; y < grid.get_height(); ++y) {
+        for (unsigned x = 0; x < grid.get_width(); ++x) {
             grid.at(x, y) *= keep;
         }
     }
@@ -137,6 +137,19 @@ static bool find_empty_space(Grid<Animal>& animal, unsigned& x, unsigned& y)
     return false;
 }
 
+static void make_baby(Random& random, Grid<Animal>& animal, unsigned mom_x,
+    unsigned mom_y, Animal& dad)
+{
+    unsigned kid_x = mom_x;
+    unsigned kid_y = mom_y;
+    if (find_empty_space(animal, kid_x, kid_y)) {
+        Animal kid(random, animal.at(mom_x, mom_y), dad);
+        kid.pos = Vec2D(kid_x + 0.5, kid_y + 0.5);
+        kid.just_moved = kid_y > mom_y || kid_x > mom_x;
+        animal.at(kid_x, kid_y) = kid;
+    }
+}
+
 static void tick_animal(Random& random, unsigned x, unsigned y,
     Grid<Animal>& animal, Grid<float>& plant, Grid<float>& carn,
     Grid<float>& herb, Grid<float>& baby)
@@ -206,13 +219,10 @@ static void tick_animal(Random& random, unsigned x, unsigned y,
                 target.food += an.food / 2.;
                 an.food /= 2.;
             } else {
-                if (is_receptive(target) && find_empty_space(animal, tx, ty)) {
-                    animal.at(tx, ty) = Animal(random, target, an);
-                    animal.at(tx, ty).pos = Vec2D(tx + 0.5, ty + 0.5);
-                } else if (is_receptive(an)
-                    && find_empty_space(animal, tx, ty)) {
-                    animal.at(tx, ty) = Animal(random, an, target);
-                    animal.at(tx, ty).pos = Vec2D(tx + 0.5, ty + 0.5);
+                if (is_receptive(target)) {
+                    make_baby(random, animal, tx, ty, an);
+                } else if (is_receptive(an)) {
+                    make_baby(random, animal, x, y, target);
                 }
             }
             an.pos = pos_orig;
@@ -265,8 +275,8 @@ void World::draw(SDL_Renderer* renderer)
     SDL_RenderGetViewport(renderer, &viewport);
     int tile_width = viewport.w / get_width();
     int tile_height = viewport.h / get_height();
-    for (unsigned x = 0; x < get_width(); ++x) {
-        for (unsigned y = 0; y < get_height(); ++y) {
+    for (unsigned y = 0; y < get_height(); ++y) {
+        for (unsigned x = 0; x < get_width(); ++x) {
             SDL_Rect tile;
             tile.x = (int)x * tile_width;
             tile.y = (int)y * tile_height;
@@ -277,8 +287,8 @@ void World::draw(SDL_Renderer* renderer)
             SDL_RenderFillRect(renderer, &tile);
         }
     }
-    for (unsigned x = 0; x < get_width(); ++x) {
-        for (unsigned y = 0; y < get_height(); ++y) {
+    for (unsigned y = 0; y < get_height(); ++y) {
+        for (unsigned x = 0; x < get_width(); ++x) {
             Animal const& an = animal.at(x, y);
             if (an.is_present) {
                 uint8_t red = an.is_carn ? 255 : 0;
