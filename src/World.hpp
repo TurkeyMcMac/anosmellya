@@ -17,8 +17,6 @@ public:
 
     unsigned get_height();
 
-    void set(unsigned x, unsigned y, float amount);
-
     void simulate(Random& random);
 
     void draw(SDL_Renderer* renderer);

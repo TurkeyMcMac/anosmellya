@@ -30,11 +30,6 @@ static void simulate(SDL_Renderer* renderer)
                 return;
             }
         }
-        int mouse_x, mouse_y;
-        if (SDL_GetMouseState(&mouse_x, &mouse_y) & SDL_BUTTON(SDL_BUTTON_LEFT)
-            && mouse_x >= 0 && mouse_y >= 0) {
-            world.set((unsigned)mouse_x / 3, (unsigned)mouse_y / 3, 100.);
-        }
         world.draw(renderer);
         SDL_RenderPresent(renderer);
         world.simulate(random);

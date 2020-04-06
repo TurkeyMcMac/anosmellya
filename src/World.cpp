@@ -32,11 +32,6 @@ unsigned World::get_width() { return animal.get_width(); }
 
 unsigned World::get_height() { return animal.get_height(); }
 
-void World::set(unsigned x, unsigned y, float amount)
-{
-    plant.at(x, y) += amount;
-}
-
 static float flow(float a, float b, float portion) { return (b - a) * portion; }
 
 static void disperse(Grid<float>& grid, float portion)
