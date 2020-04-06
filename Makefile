@@ -1,2 +1,2 @@
-anosmellya: *.[ch]pp
-	c++ -O3 -flto -Wall -Wextra -std=c++11 -o $@ *.cpp -lSDL2
+anosmellya: src/*
+	c++ -O3 -flto -Wall -Wextra -std=c++11 -o $@ src/*.cpp -lSDL2
