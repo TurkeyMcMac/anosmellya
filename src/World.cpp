@@ -137,6 +137,19 @@ static bool find_empty_space(Grid<Animal>& animal, unsigned& x, unsigned& y)
     return false;
 }
 
+static void make_baby(Random& random, Grid<Animal>& animal, unsigned mom_x,
+    unsigned mom_y, Animal& dad)
+{
+    unsigned kid_x = mom_x;
+    unsigned kid_y = mom_y;
+    if (find_empty_space(animal, kid_x, kid_y)) {
+        Animal kid(random, animal.at(mom_x, mom_y), dad);
+        kid.pos = Vec2D(kid_x + 0.5, kid_y + 0.5);
+        kid.just_moved = kid_y > mom_y || kid_x > mom_x;
+        animal.at(kid_x, kid_y) = kid;
+    }
+}
+
 static void tick_animal(Random& random, unsigned x, unsigned y,
     Grid<Animal>& animal, Grid<float>& plant, Grid<float>& carn,
     Grid<float>& herb, Grid<float>& baby)
@@ -206,13 +219,10 @@ static void tick_animal(Random& random, unsigned x, unsigned y,
                 target.food += an.food;
                 an.is_present = false;
             } else {
-                if (is_receptive(target) && find_empty_space(animal, tx, ty)) {
-                    animal.at(tx, ty) = Animal(random, target, an);
-                    animal.at(tx, ty).pos = Vec2D(tx + 0.5, ty + 0.5);
-                } else if (is_receptive(an)
-                    && find_empty_space(animal, tx, ty)) {
-                    animal.at(tx, ty) = Animal(random, an, target);
-                    animal.at(tx, ty).pos = Vec2D(tx + 0.5, ty + 0.5);
+                if (is_receptive(target)) {
+                    make_baby(random, animal, tx, ty, an);
+                } else if (is_receptive(an)) {
+                    make_baby(random, animal, x, y, target);
                 }
                 an.pos = pos_orig;
                 an.vel = vel_orig;
