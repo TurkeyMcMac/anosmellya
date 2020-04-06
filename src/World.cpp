@@ -13,7 +13,7 @@ World::World(unsigned width, unsigned height, Random& random,
 {
     for (unsigned x = 0; x < width; ++x) {
         for (unsigned y = 0; y < height; ++y) {
-            Animal an = Animal();
+            Animal an;
             if (animal_chance > random.generate(1.)) {
                 if (carn_chance > random.generate(1.)) {
                     an.be_carn();
