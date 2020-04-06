@@ -247,11 +247,11 @@ void World::simulate(Random& random)
 
 static uint8_t amount2color(float amount)
 {
-    amount *= 5.;
+    amount *= 3.;
     if (amount < 0.) {
         return 0;
-    } else if (amount > 200.) {
-        return 200;
+    } else if (amount > 128.) {
+        return 128;
     } else {
         return (uint8_t)amount;
     }
