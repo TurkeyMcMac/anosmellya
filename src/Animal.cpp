@@ -44,18 +44,22 @@ Animal::Animal()
 {
 }
 
-static float avg(float a, float b) { return (a + b) / 2.; }
+static float pick(Random& random, float a, float b)
+{
+    return random.generate() % 2 == 0 ? a : b;
+}
 
-static SmellAffinity avg_aff(SmellAffinity const& a, SmellAffinity const& b)
+static SmellAffinity pick_aff(
+    Random& random, SmellAffinity const& a, SmellAffinity const& b)
 {
     SmellAffinity aff;
-    aff.impulse.x = avg(a.impulse.x, b.impulse.x);
-    aff.impulse.y = avg(a.impulse.y, b.impulse.y);
-    aff.plant_effect = avg(a.plant_effect, b.plant_effect);
-    aff.herb_effect = avg(a.herb_effect, b.herb_effect);
-    aff.carn_effect = avg(a.carn_effect, b.carn_effect);
-    aff.baby_effect = avg(a.baby_effect, b.baby_effect);
-    aff.food_effect = avg(a.food_effect, b.food_effect);
+    aff.impulse.x = pick(random, a.impulse.x, b.impulse.x);
+    aff.impulse.y = pick(random, a.impulse.y, b.impulse.y);
+    aff.plant_effect = pick(random, a.plant_effect, b.plant_effect);
+    aff.herb_effect = pick(random, a.herb_effect, b.herb_effect);
+    aff.carn_effect = pick(random, a.carn_effect, b.carn_effect);
+    aff.baby_effect = pick(random, a.baby_effect, b.baby_effect);
+    aff.food_effect = pick(random, a.food_effect, b.food_effect);
     return aff;
 }
 
@@ -66,16 +70,17 @@ Animal::Animal(Random& random, Animal& mother, Animal& father)
     , age(0)
     , is_present(true)
     , is_carn(mother.is_carn)
-    , mutate_chance(avg(mother.mutate_chance, father.mutate_chance))
-    , mutate_amount(avg(mother.mutate_amount, father.mutate_amount))
-    , baby_smell_amount(avg(mother.baby_smell_amount, father.baby_smell_amount))
-    , baby_threshold(avg(mother.baby_threshold, father.baby_threshold))
-    , baby_food(avg(mother.baby_threshold, father.baby_threshold))
-    , plant_aff(avg_aff(mother.plant_aff, father.plant_aff))
-    , herb_aff(avg_aff(mother.herb_aff, father.herb_aff))
-    , carn_aff(avg_aff(mother.carn_aff, father.carn_aff))
-    , baby_aff(avg_aff(mother.baby_aff, father.baby_aff))
-    , vel_aff(avg_aff(mother.vel_aff, father.vel_aff))
+    , mutate_chance(pick(random, mother.mutate_chance, father.mutate_chance))
+    , mutate_amount(pick(random, mother.mutate_amount, father.mutate_amount))
+    , baby_smell_amount(
+          pick(random, mother.baby_smell_amount, father.baby_smell_amount))
+    , baby_threshold(pick(random, mother.baby_threshold, father.baby_threshold))
+    , baby_food(pick(random, mother.baby_threshold, father.baby_threshold))
+    , plant_aff(pick_aff(random, mother.plant_aff, father.plant_aff))
+    , herb_aff(pick_aff(random, mother.herb_aff, father.herb_aff))
+    , carn_aff(pick_aff(random, mother.carn_aff, father.carn_aff))
+    , baby_aff(pick_aff(random, mother.baby_aff, father.baby_aff))
+    , vel_aff(pick_aff(random, mother.vel_aff, father.vel_aff))
 {
     mother.food -= food;
     if (mother.food < 0) {
