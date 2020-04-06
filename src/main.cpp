@@ -7,6 +7,9 @@
 
 using namespace anosmellya;
 
+static const unsigned WORLD_WIDTH = 300;
+static const unsigned WORLD_HEIGHT = 150;
+
 static bool is_quit_event(SDL_Event& event)
 {
     return event.type == SDL_QUIT
@@ -18,10 +21,8 @@ static void simulate(SDL_Renderer* renderer)
     SDL_Event event;
     SDL_Rect screen_dims;
     SDL_RenderGetViewport(renderer, &screen_dims);
-    unsigned world_width = screen_dims.w / 4;
-    unsigned world_height = screen_dims.h / 4;
     Random random((uint32_t)time(NULL));
-    World world(world_width, world_height, random, 0.1, 0.1);
+    World world(WORLD_WIDTH, WORLD_HEIGHT, random, 0.1, 0.1);
     for (;;) {
         Uint32 ticks = SDL_GetTicks();
         while (SDL_PollEvent(&event)) {
@@ -62,7 +63,7 @@ int main(int argc, char* argv[])
             SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
         }
         window = SDL_CreateWindow("Intergrid", SDL_WINDOWPOS_CENTERED,
-            SDL_WINDOWPOS_CENTERED, 1200, 600,
+            SDL_WINDOWPOS_CENTERED, WORLD_WIDTH * 4, WORLD_HEIGHT * 4,
             SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
         if (!window) {
             fprintf(stderr, "SDL window creation failed; %s\n", SDL_GetError());
