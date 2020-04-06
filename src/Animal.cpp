@@ -88,7 +88,7 @@ Animal::Animal(Random& random, Animal& mother, Animal& father)
         mother.food = 0;
     }
     if (mother.mutate_chance > random.generate(1.)) {
-        mutate(random, mother.mutate_chance);
+        mutate(random, mother.mutate_amount);
     }
 }
 
