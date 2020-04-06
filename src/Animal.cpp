@@ -44,19 +44,6 @@ Animal::Animal()
 {
 }
 
-/*
-Animal::Animal(Random& random, float carnivore_chance)
-    : Animal()
-{
-    is_present = true;
-    is_carn = carnivore_chance > random.generate(1.);
-    mutate(random, 1.);
-    baby_smell_amount *= 50.;
-    baby_food *= 50.;
-    baby_threshold = baby_food + baby_threshold * 50.;
-}
-*/
-
 static float avg(float a, float b) { return (a + b) / 2.; }
 
 static SmellAffinity avg_aff(SmellAffinity const& a, SmellAffinity const& b)

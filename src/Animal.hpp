@@ -22,8 +22,6 @@ struct SmellAffinity {
 struct Animal {
     Animal();
 
-    //Animal(Random& random, float carnivore_chance);
-
     Animal(Random& random, Animal& mother, Animal& father);
 
     void be_carn();
