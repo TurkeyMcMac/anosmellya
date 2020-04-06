@@ -8,7 +8,7 @@
 using namespace anosmellya;
 
 static const unsigned WORLD_WIDTH = 300;
-static const unsigned WORLD_HEIGHT = 150;
+static const unsigned WORLD_HEIGHT = 210;
 
 static bool is_quit_event(SDL_Event& event)
 {
@@ -33,7 +33,7 @@ static void simulate(SDL_Renderer* renderer)
         int mouse_x, mouse_y;
         if (SDL_GetMouseState(&mouse_x, &mouse_y) & SDL_BUTTON(SDL_BUTTON_LEFT)
             && mouse_x >= 0 && mouse_y >= 0) {
-            world.set((unsigned)mouse_x / 4, (unsigned)mouse_y / 4, 100.);
+            world.set((unsigned)mouse_x / 3, (unsigned)mouse_y / 3, 100.);
         }
         world.draw(renderer);
         SDL_RenderPresent(renderer);
@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
             SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
         }
         window = SDL_CreateWindow("Intergrid", SDL_WINDOWPOS_CENTERED,
-            SDL_WINDOWPOS_CENTERED, WORLD_WIDTH * 4, WORLD_HEIGHT * 4,
+            SDL_WINDOWPOS_CENTERED, WORLD_WIDTH * 3, WORLD_HEIGHT * 3,
             SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
         if (!window) {
             fprintf(stderr, "SDL window creation failed; %s\n", SDL_GetError());

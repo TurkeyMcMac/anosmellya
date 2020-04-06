@@ -94,15 +94,15 @@ Animal::Animal(Random& random, Animal& mother, Animal& father)
 
 void Animal::be_carn()
 {
-    food = 50.;
+    food = 100.;
     age = 0.;
     is_present = true;
     is_carn = true;
     mutate_chance = 0.02;
     mutate_amount = 0.1;
     baby_smell_amount = 1.;
-    baby_threshold = 50.;
-    baby_food = 25.;
+    baby_threshold = 100.;
+    baby_food = 50.;
     plant_aff = SmellAffinity();
     herb_aff = SmellAffinity();
     herb_aff.impulse.x = 1.;
@@ -115,15 +115,15 @@ void Animal::be_carn()
 
 void Animal::be_herb()
 {
-    food = 50.;
+    food = 100.;
     age = 0.;
     is_present = true;
     is_carn = false;
     mutate_chance = 0.02;
     mutate_amount = 0.1;
     baby_smell_amount = 1.;
-    baby_threshold = 50.;
-    baby_food = 25.;
+    baby_threshold = 100.;
+    baby_food = 50.;
     plant_aff = SmellAffinity();
     plant_aff.impulse.x = 1.;
     herb_aff = SmellAffinity();
