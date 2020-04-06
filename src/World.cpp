@@ -13,15 +13,15 @@ World::World(unsigned width, unsigned height, Random& random,
 {
     for (unsigned x = 0; x < width; ++x) {
         for (unsigned y = 0; y < height; ++y) {
-	    Animal an = Animal();
+            Animal an = Animal();
             if (animal_chance > random.generate(1.)) {
-		    if (carn_chance > random.generate(1.)) {
-			    an.be_carn();
-		    } else {
-			    an.be_herb();
-		    }
-		    an.pos = Vec2D(x, y);
-		    an.mutate(random, 0.03);
+                if (carn_chance > random.generate(1.)) {
+                    an.be_carn();
+                } else {
+                    an.be_herb();
+                }
+                an.pos = Vec2D(x, y);
+                an.mutate(random, 0.03);
             }
             animal.at(x, y) = an;
         }
@@ -108,37 +108,38 @@ static void add_output_impulse(Vec2D& acc, Vec2D input,
 
 static bool is_receptive(Animal const& an)
 {
-	return an.food >= an.baby_threshold;
+    return an.food >= an.baby_threshold;
 }
 
 static bool find_empty_space(Grid<Animal>& animal, unsigned& x, unsigned& y)
 {
-	unsigned tx = x;
-	unsigned ty = y;
-	animal.small_trans(tx, ty, 1, 0);
-	if (!animal.at(tx, ty).is_present) {
-		goto found;
-	}
-	animal.small_trans(tx, ty, -1, -1);
-	if (!animal.at(tx, ty).is_present) {
-		goto found;
-	}
-	animal.small_trans(tx, ty, -1, 1);
-	if (!animal.at(tx, ty).is_present) {
-		goto found;
-	}
-	animal.small_trans(tx, ty, 1, 1);
-	if (!animal.at(tx, ty).is_present) {
-found:
-		x = tx;
-		y = ty;
-		return true;
-	}
-	return false;
+    unsigned tx = x;
+    unsigned ty = y;
+    animal.small_trans(tx, ty, 1, 0);
+    if (!animal.at(tx, ty).is_present) {
+        goto found;
+    }
+    animal.small_trans(tx, ty, -1, -1);
+    if (!animal.at(tx, ty).is_present) {
+        goto found;
+    }
+    animal.small_trans(tx, ty, -1, 1);
+    if (!animal.at(tx, ty).is_present) {
+        goto found;
+    }
+    animal.small_trans(tx, ty, 1, 1);
+    if (!animal.at(tx, ty).is_present) {
+    found:
+        x = tx;
+        y = ty;
+        return true;
+    }
+    return false;
 }
 
-static void tick_animal(Random& random, unsigned x, unsigned y, Grid<Animal>& animal,
-    Grid<float>& plant, Grid<float>& carn, Grid<float>& herb, Grid<float>& baby)
+static void tick_animal(Random& random, unsigned x, unsigned y,
+    Grid<Animal>& animal, Grid<float>& plant, Grid<float>& carn,
+    Grid<float>& herb, Grid<float>& baby)
 {
     Animal& an = animal.at(x, y);
     if (!an.is_present) {
@@ -151,8 +152,8 @@ static void tick_animal(Random& random, unsigned x, unsigned y, Grid<Animal>& an
     ++an.age;
     --an.food;
     if (an.age > 500 || an.food < 0.) {
-	an.is_present = false;
-	return;
+        an.is_present = false;
+        return;
     }
     Vec2D pos_orig = an.pos;
     Vec2D vel_orig = an.vel;
@@ -173,8 +174,8 @@ static void tick_animal(Random& random, unsigned x, unsigned y, Grid<Animal>& an
         herb_here, baby_here, an.food);
     float acc_divisor = hypot(acc.x, acc.y) * 20.;
     if (acc_divisor != 0.) {
-	    an.vel.x += acc.x / acc_divisor;
-	    an.vel.y += acc.y / acc_divisor;
+        an.vel.x += acc.x / acc_divisor;
+        an.vel.y += acc.y / acc_divisor;
     }
     an.vel.x *= 0.97;
     an.vel.y *= 0.97;
@@ -185,42 +186,43 @@ static void tick_animal(Random& random, unsigned x, unsigned y, Grid<Animal>& an
     unsigned tx = an.pos.x;
     unsigned ty = an.pos.y;
     if (is_receptive(an)) {
-    	baby.at(tx, ty) += an.baby_smell_amount;
+        baby.at(tx, ty) += an.baby_smell_amount;
     }
     if (an.is_carn) {
         carn.at(tx, ty) += 1.;
     } else {
-	float eat = plant.at(tx, ty) / 2.;
-	an.food += eat;
+        float eat = plant.at(tx, ty) / 2.;
+        an.food += eat;
         plant.at(tx, ty) -= eat;
         herb.at(tx, ty) += 1.;
     }
     if (tx != x || ty != y) {
-	Animal& target = animal.at(tx, ty);
-    	if (target.is_present) {
-	    if (an.is_carn && !target.is_carn) {
-		    an.food += target.food;
-		    goto shift_animal;
-	    } else if  (!an.is_carn && target.is_carn) {
-		    target.food += an.food;
-		    an.is_present = false;
-	    } else {
-		    if (is_receptive(target) && find_empty_space(animal, tx, ty)) {
-			    animal.at(tx, ty) = Animal(random, target, an);
-			    animal.at(tx, ty).pos = Vec2D(tx + 0.5, ty + 0.5);
-		    } else if (is_receptive(an) && find_empty_space(animal, tx, ty)) {
-			    animal.at(tx, ty) = Animal(random, an, target);
-			    animal.at(tx, ty).pos = Vec2D(tx + 0.5, ty + 0.5);
-		    }
-		    an.pos = pos_orig;
-		    an.vel = vel_orig;
-	    }
-	} else {
-shift_animal:
-	    target = an;
+        Animal& target = animal.at(tx, ty);
+        if (target.is_present) {
+            if (an.is_carn && !target.is_carn) {
+                an.food += target.food;
+                goto shift_animal;
+            } else if (!an.is_carn && target.is_carn) {
+                target.food += an.food;
+                an.is_present = false;
+            } else {
+                if (is_receptive(target) && find_empty_space(animal, tx, ty)) {
+                    animal.at(tx, ty) = Animal(random, target, an);
+                    animal.at(tx, ty).pos = Vec2D(tx + 0.5, ty + 0.5);
+                } else if (is_receptive(an)
+                    && find_empty_space(animal, tx, ty)) {
+                    animal.at(tx, ty) = Animal(random, an, target);
+                    animal.at(tx, ty).pos = Vec2D(tx + 0.5, ty + 0.5);
+                }
+                an.pos = pos_orig;
+                an.vel = vel_orig;
+            }
+        } else {
+        shift_animal:
+            target = an;
             target.just_moved = ty > y || tx > x;
-	    an.is_present = false;
-	}
+            an.is_present = false;
+        }
     }
 }
 
@@ -240,8 +242,9 @@ void World::simulate(Random& random)
         }
     }
     for (unsigned i = 0; i < 4; ++i) {
-	    plant.at(random.generate() % get_width(), random.generate() % get_height())
-		+= 800.;
+        plant.at(
+            random.generate() % get_width(), random.generate() % get_height())
+            += 800.;
     }
 }
 
@@ -270,10 +273,8 @@ void World::draw(SDL_Renderer* renderer)
             tile.y = (int)y * tile_height;
             tile.w = tile_width;
             tile.h = tile_height;
-            SDL_SetRenderDrawColor(renderer,
-                amount2color(carn.at(x, y)),
-                amount2color(plant.at(x, y)),
-                amount2color(herb.at(x, y)), 255);
+            SDL_SetRenderDrawColor(renderer, amount2color(carn.at(x, y)),
+                amount2color(plant.at(x, y)), amount2color(herb.at(x, y)), 255);
             SDL_RenderFillRect(renderer, &tile);
         }
     }

@@ -26,10 +26,7 @@ public:
         return (float)generate() / (MAX_INT + 1.) * max;
     }
 
-    float generate_pos_neg(float max)
-    {
-    	return generate(max * 2.) - max;
-    }
+    float generate_pos_neg(float max) { return generate(max * 2.) - max; }
 
 private:
     uint32_t state;
