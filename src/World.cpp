@@ -200,11 +200,11 @@ static void tick_animal(Random& random, unsigned x, unsigned y,
         Animal& target = animal.at(tx, ty);
         if (target.is_present) {
             if (an.is_carn && !target.is_carn) {
-                an.food += target.food;
-                goto shift_animal;
+                an.food += target.food / 2.;
+                target.food /= 2.;
             } else if (!an.is_carn && target.is_carn) {
-                target.food += an.food;
-                an.is_present = false;
+                target.food += an.food / 2.;
+                an.food /= 2.;
             } else {
                 if (is_receptive(target) && find_empty_space(animal, tx, ty)) {
                     animal.at(tx, ty) = Animal(random, target, an);
@@ -214,11 +214,10 @@ static void tick_animal(Random& random, unsigned x, unsigned y,
                     animal.at(tx, ty) = Animal(random, an, target);
                     animal.at(tx, ty).pos = Vec2D(tx + 0.5, ty + 0.5);
                 }
-                an.pos = pos_orig;
-                an.vel = vel_orig;
             }
+            an.pos = pos_orig;
+            an.vel = vel_orig;
         } else {
-        shift_animal:
             target = an;
             target.just_moved = ty > y || tx > x;
             an.is_present = false;
