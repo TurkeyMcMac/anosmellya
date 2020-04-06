@@ -153,6 +153,9 @@ void Animal::mutate(Random& random, float mutate_amount)
     baby_smell_amount += random.generate_pos_neg(mutate_amount);
     baby_threshold += random.generate_pos_neg(mutate_amount);
     baby_food += random.generate_pos_neg(mutate_amount);
+    if (baby_food < 0.) {
+        baby_food = 0.;
+    }
     mutate_affinity(plant_aff, random, mutate_amount);
     mutate_affinity(herb_aff, random, mutate_amount);
     mutate_affinity(carn_aff, random, mutate_amount);
