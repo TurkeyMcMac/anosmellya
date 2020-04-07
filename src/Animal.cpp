@@ -66,7 +66,7 @@ static SmellAffinity pick_aff(
 Animal::Animal(Random& random, Animal& mother, Animal& father)
     : pos(mother.pos)
     , vel(mother.vel)
-    , food(mother.baby_food)
+    , food(fmaxf(0., fminf(mother.baby_food, mother.food)))
     , age(0)
     , is_present(true)
     , is_carn(mother.is_carn)
@@ -83,10 +83,6 @@ Animal::Animal(Random& random, Animal& mother, Animal& father)
     , vel_aff(pick_aff(random, mother.vel_aff, father.vel_aff))
 {
     mother.food -= food;
-    if (mother.food < 0) {
-        food += mother.food;
-        mother.food = 0;
-    }
     if (mother.mutate_chance > random.generate(1.)) {
         mutate(random, mother.mutate_amount);
     }
@@ -153,9 +149,6 @@ void Animal::mutate(Random& random, float mutate_amount)
     baby_smell_amount += random.generate_pos_neg(mutate_amount);
     baby_threshold += random.generate_pos_neg(mutate_amount);
     baby_food += random.generate_pos_neg(mutate_amount);
-    if (baby_food < 0.) {
-        baby_food = 0.;
-    }
     mutate_affinity(plant_aff, random, mutate_amount);
     mutate_affinity(herb_aff, random, mutate_amount);
     mutate_affinity(carn_aff, random, mutate_amount);
