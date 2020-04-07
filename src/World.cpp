@@ -268,15 +268,13 @@ void World::draw(SDL_Renderer* renderer)
 {
     SDL_Rect viewport;
     SDL_RenderGetViewport(renderer, &viewport);
-    int tile_width = viewport.w / get_width();
-    int tile_height = viewport.h / get_height();
+    SDL_Rect tile;
+    tile.w = viewport.w / get_width();
+    tile.h = viewport.h / get_height();
     for (unsigned y = 0; y < get_height(); ++y) {
         for (unsigned x = 0; x < get_width(); ++x) {
-            SDL_Rect tile;
-            tile.x = (int)x * tile_width;
-            tile.y = (int)y * tile_height;
-            tile.w = tile_width;
-            tile.h = tile_height;
+            tile.x = (int)x * tile.w;
+            tile.y = (int)y * tile.h;
             SDL_SetRenderDrawColor(renderer, amount2color(carn.at(x, y)),
                 amount2color(plant.at(x, y)), amount2color(herb.at(x, y)), 255);
             SDL_RenderFillRect(renderer, &tile);
@@ -288,11 +286,8 @@ void World::draw(SDL_Renderer* renderer)
             if (an.is_present) {
                 uint8_t red = an.is_carn ? 255 : 0;
                 uint8_t blue = an.is_carn ? 0 : 255;
-                SDL_Rect tile;
-                tile.x = an.pos.x * tile_width - 1.;
-                tile.y = an.pos.y * tile_height - 1.;
-                tile.w = 3;
-                tile.h = 3;
+                tile.x = (an.pos.x - 0.5) * tile.w;
+                tile.y = (an.pos.y - 0.5) * tile.h;
                 SDL_SetRenderDrawColor(renderer, red, 0, blue, 255);
                 SDL_RenderFillRect(renderer, &tile);
             }
