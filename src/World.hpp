@@ -10,7 +10,7 @@ namespace anosmellya {
 
 class World {
 public:
-    World(unsigned width, unsigned height, Random& random, float herb_chance,
+    World(unsigned width, unsigned height, Random& random, float animal_chance,
         float carn_chance);
 
     unsigned get_width();
