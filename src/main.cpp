@@ -64,13 +64,6 @@ int main(int argc, char* argv[])
             fprintf(stderr, "SDL window creation failed; %s\n", SDL_GetError());
             goto error_create_window;
         }
-        /*
-        if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP) < 0)
-        { fprintf(stderr, "SDL window fullscreenification failed; %s\n",
-                SDL_GetError());
-            // Keep executing.
-        }
-        */
         renderer = SDL_CreateRenderer(window, -1, 0);
         if (!renderer) {
             fprintf(
