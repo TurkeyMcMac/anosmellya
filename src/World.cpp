@@ -159,7 +159,7 @@ static void tick_animal(Random& random, unsigned x, unsigned y,
     }
     ++an.age;
     --an.food;
-    if (an.age > 500 || an.food < 0.) {
+    if (an.age > 500 || !(an.food >= 0.)) {
         an.is_present = false;
         return;
     }
