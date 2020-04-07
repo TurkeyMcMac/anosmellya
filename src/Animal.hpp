@@ -30,8 +30,6 @@ struct Animal {
 
     void mutate(Random& random, float mutate_amount);
 
-    void position(Vec2D position);
-
     /* INDIVIDUAL ATTRIBUTES */
     Vec2D pos;
     Vec2D vel;

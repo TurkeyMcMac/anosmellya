@@ -155,5 +155,3 @@ void Animal::mutate(Random& random, float mutate_amount)
     mutate_affinity(baby_aff, random, mutate_amount);
     mutate_affinity(vel_aff, random, mutate_amount);
 }
-
-void Animal::position(Vec2D position) { pos = position; }
