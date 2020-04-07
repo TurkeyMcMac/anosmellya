@@ -5,8 +5,22 @@
 #include "Grid.hpp"
 #include "Random.hpp"
 #include <SDL2/SDL.h>
+#include <stdio.h>
 
 namespace anosmellya {
+
+struct Statistics {
+    Animal herb_avg;
+    unsigned herb_count;
+    Animal carn_avg;
+    unsigned carn_count;
+    float plant_total;
+    float herb_total;
+    float carn_total;
+    float baby_total;
+
+    void print(FILE* to);
+};
 
 class World {
 public:
@@ -20,6 +34,8 @@ public:
     void simulate(Random& random);
 
     void draw(SDL_Renderer* renderer);
+
+    void get_statistics(Statistics& stats);
 
 private:
     Grid<Animal> animal;

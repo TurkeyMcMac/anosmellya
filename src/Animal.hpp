@@ -3,6 +3,7 @@
 
 #include "Random.hpp"
 #include "Vec2D.hpp"
+#include <stdio.h>
 
 namespace anosmellya {
 
@@ -29,6 +30,12 @@ struct Animal {
     void be_herb();
 
     void mutate(Random& random, float amount);
+
+    void add(Animal const& an);
+
+    void divide(float d);
+
+    void print(FILE* to);
 
     /* INDIVIDUAL ATTRIBUTES */
     Vec2D pos;

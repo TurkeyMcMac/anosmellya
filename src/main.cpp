@@ -23,6 +23,7 @@ static void simulate(SDL_Renderer* renderer)
     SDL_RenderGetViewport(renderer, &screen_dims);
     Random random((uint32_t)time(NULL));
     World world(WORLD_WIDTH, WORLD_HEIGHT, random, 0.1, 0.1);
+    Statistics stats;
     for (;;) {
         Uint32 ticks = SDL_GetTicks();
         while (SDL_PollEvent(&event)) {
@@ -30,6 +31,9 @@ static void simulate(SDL_Renderer* renderer)
                 return;
             }
         }
+        world.get_statistics(stats);
+        stats.print(stdout);
+        fflush(stdout);
         world.draw(renderer);
         SDL_RenderPresent(renderer);
         world.simulate(random);

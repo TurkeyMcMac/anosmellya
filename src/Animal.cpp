@@ -155,3 +155,79 @@ void Animal::mutate(Random& random, float amount)
     mutate_affinity(baby_aff, random, amount);
     mutate_affinity(vel_aff, random, amount);
 }
+
+static void add_affinities(SmellAffinity& a, SmellAffinity const& b)
+{
+    a.impulse.x += b.impulse.x;
+    a.impulse.y += b.impulse.y;
+    a.plant_effect += b.plant_effect;
+    a.herb_effect += b.herb_effect;
+    a.carn_effect += b.carn_effect;
+    a.food_effect += b.food_effect;
+}
+
+void Animal::add(Animal const& an)
+{
+    mutate_chance += an.mutate_chance;
+    mutate_amount += an.mutate_amount;
+    baby_smell_amount += an.baby_smell_amount;
+    baby_threshold += an.baby_threshold;
+    baby_food += an.baby_food;
+    add_affinities(plant_aff, an.plant_aff);
+    add_affinities(herb_aff, an.herb_aff);
+    add_affinities(carn_aff, an.carn_aff);
+    add_affinities(baby_aff, an.baby_aff);
+    add_affinities(vel_aff, an.vel_aff);
+}
+
+static void divide_affinity(SmellAffinity& aff, float d)
+{
+    aff.impulse.x /= d;
+    aff.impulse.y /= d;
+    aff.plant_effect /= d;
+    aff.herb_effect /= d;
+    aff.carn_effect /= d;
+    aff.food_effect /= d;
+}
+
+void Animal::divide(float d)
+{
+    mutate_chance /= d;
+    mutate_amount /= d;
+    baby_smell_amount /= d;
+    baby_threshold /= d;
+    baby_food /= d;
+    divide_affinity(plant_aff, d);
+    divide_affinity(herb_aff, d);
+    divide_affinity(carn_aff, d);
+    divide_affinity(baby_aff, d);
+    divide_affinity(vel_aff, d);
+}
+
+static void print_affinity(SmellAffinity const& aff, FILE* to)
+{
+    fprintf(to, "{\"impulse\":[%f,%f]", aff.impulse.x, aff.impulse.y);
+    fprintf(to, ",\"plant_effect\":%f", aff.plant_effect);
+    fprintf(to, ",\"herb_effect\":%f", aff.herb_effect);
+    fprintf(to, ",\"carn_effect\":%f", aff.carn_effect);
+    fprintf(to, ",\"food_effect\":%f}", aff.food_effect);
+}
+
+void Animal::print(FILE* to)
+{
+    fprintf(to, "{\"mutate_chance\":%f", mutate_chance);
+    fprintf(to, ",\"mutate_amount\":%f", mutate_amount);
+    fprintf(to, ",\"baby_smell_amount\":%f", baby_smell_amount);
+    fprintf(to, ",\"baby_threshold\":%f", baby_threshold);
+    fprintf(to, ",\"baby_food\":%f,\"plant_aff\":", baby_food);
+    print_affinity(plant_aff, to);
+    fputs(",\"herb_aff\":", to);
+    print_affinity(herb_aff, to);
+    fputs(",\"carn_aff\":", to);
+    print_affinity(carn_aff, to);
+    fputs(",\"baby_aff\":", to);
+    print_affinity(baby_aff, to);
+    fputs(",\"vel_aff\":", to);
+    print_affinity(vel_aff, to);
+    fputc('}', to);
+}

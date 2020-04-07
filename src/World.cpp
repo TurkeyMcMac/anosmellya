@@ -294,3 +294,49 @@ void World::draw(SDL_Renderer* renderer)
         }
     }
 }
+
+void World::get_statistics(Statistics& stats)
+{
+    stats.herb_avg = Animal();
+    stats.herb_count = 0;
+    stats.carn_avg = Animal();
+    stats.carn_count = 0;
+    stats.plant_total = 0.;
+    stats.herb_total = 0.;
+    stats.carn_total = 0.;
+    stats.baby_total = 0.;
+    for (unsigned y = 0; y < get_height(); ++y) {
+        for (unsigned x = 0; x < get_width(); ++x) {
+            Animal const& an = animal.at(x, y);
+            if (an.is_present) {
+                if (an.is_carn) {
+                    stats.carn_avg.add(an);
+                    ++stats.carn_count;
+                } else {
+                    stats.herb_avg.add(an);
+                    ++stats.herb_count;
+                }
+            }
+            stats.plant_total += plant.at(x, y);
+            stats.herb_total += herb.at(x, y);
+            stats.carn_total += carn.at(x, y);
+            stats.baby_total += baby.at(x, y);
+        }
+    }
+    stats.herb_avg.divide((float)stats.herb_count);
+    stats.carn_avg.divide((float)stats.carn_count);
+}
+
+void Statistics::print(FILE* to)
+{
+    fputs("{\"herb_avg\":", to);
+    herb_avg.print(to);
+    fprintf(to, ",\"herb_count\":%u", herb_count);
+    fputs(",\"carn_avg\":", to);
+    carn_avg.print(to);
+    fprintf(to, ",\"carn_count\":%u", carn_count);
+    fprintf(to, ",\"plant_total\":%f", plant_total);
+    fprintf(to, ",\"herb_total\":%f", herb_total);
+    fprintf(to, ",\"carn_total\":%f", carn_total);
+    fprintf(to, ",\"baby_total\":%f}", baby_total);
+}
