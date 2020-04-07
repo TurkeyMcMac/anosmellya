@@ -142,16 +142,16 @@ static void mutate_affinity(
     aff.food_effect += random.generate_pos_neg(mutate_amount);
 }
 
-void Animal::mutate(Random& random, float mutate_amount)
+void Animal::mutate(Random& random, float amount)
 {
-    mutate_chance += random.generate_pos_neg(mutate_amount);
-    mutate_amount += random.generate_pos_neg(mutate_amount);
-    baby_smell_amount += random.generate_pos_neg(mutate_amount);
-    baby_threshold += random.generate_pos_neg(mutate_amount);
-    baby_food += random.generate_pos_neg(mutate_amount);
-    mutate_affinity(plant_aff, random, mutate_amount);
-    mutate_affinity(herb_aff, random, mutate_amount);
-    mutate_affinity(carn_aff, random, mutate_amount);
-    mutate_affinity(baby_aff, random, mutate_amount);
-    mutate_affinity(vel_aff, random, mutate_amount);
+    mutate_chance += random.generate_pos_neg(amount);
+    mutate_amount += random.generate_pos_neg(amount);
+    baby_smell_amount += random.generate_pos_neg(amount);
+    baby_threshold += random.generate_pos_neg(amount);
+    baby_food += random.generate_pos_neg(amount);
+    mutate_affinity(plant_aff, random, amount);
+    mutate_affinity(herb_aff, random, amount);
+    mutate_affinity(carn_aff, random, amount);
+    mutate_affinity(baby_aff, random, amount);
+    mutate_affinity(vel_aff, random, amount);
 }

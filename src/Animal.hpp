@@ -28,7 +28,7 @@ struct Animal {
 
     void be_herb();
 
-    void mutate(Random& random, float mutate_amount);
+    void mutate(Random& random, float amount);
 
     /* INDIVIDUAL ATTRIBUTES */
     Vec2D pos;
