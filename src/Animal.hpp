@@ -37,6 +37,10 @@ struct Animal {
 
     void print(FILE* to);
 
+    static constexpr float MUTATE_CHANCE = 0.05;
+
+    static constexpr float MUTATE_AMOUNT = 4.;
+
     /* INDIVIDUAL ATTRIBUTES */
     Vec2D pos;
     Vec2D vel;
@@ -46,8 +50,6 @@ struct Animal {
     bool just_moved;
     /* GENETICS */
     bool is_carn;
-    float mutate_chance;
-    float mutate_amount;
     float baby_smell_amount;
     float baby_threshold;
     float baby_food;

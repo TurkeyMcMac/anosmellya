@@ -31,8 +31,6 @@ Animal::Animal()
     , is_present(false)
     , just_moved(false)
     , is_carn(false)
-    , mutate_chance(0.)
-    , mutate_amount(0.)
     , baby_smell_amount(0.)
     , baby_threshold(0.)
     , baby_food(0.)
@@ -70,8 +68,6 @@ Animal::Animal(Random& random, Animal& mother, Animal& father)
     , age(0)
     , is_present(true)
     , is_carn(mother.is_carn)
-    , mutate_chance(pick(random, mother.mutate_chance, father.mutate_chance))
-    , mutate_amount(pick(random, mother.mutate_amount, father.mutate_amount))
     , baby_smell_amount(
           pick(random, mother.baby_smell_amount, father.baby_smell_amount))
     , baby_threshold(pick(random, mother.baby_threshold, father.baby_threshold))
@@ -83,8 +79,8 @@ Animal::Animal(Random& random, Animal& mother, Animal& father)
     , vel_aff(pick_aff(random, mother.vel_aff, father.vel_aff))
 {
     mother.food -= food;
-    if (mother.mutate_chance > random.generate(1.)) {
-        mutate(random, mother.mutate_amount);
+    if (Animal::MUTATE_CHANCE > random.generate(1.)) {
+        mutate(random, Animal::MUTATE_AMOUNT);
     }
 }
 
@@ -94,8 +90,6 @@ void Animal::be_carn()
     age = 0.;
     is_present = true;
     is_carn = true;
-    mutate_chance = 0.02;
-    mutate_amount = 0.1;
     baby_smell_amount = 1.;
     baby_threshold = 100.;
     baby_food = 50.;
@@ -115,8 +109,6 @@ void Animal::be_herb()
     age = 0.;
     is_present = true;
     is_carn = false;
-    mutate_chance = 0.02;
-    mutate_amount = 0.1;
     baby_smell_amount = 1.;
     baby_threshold = 100.;
     baby_food = 50.;
@@ -144,8 +136,6 @@ static void mutate_affinity(
 
 void Animal::mutate(Random& random, float amount)
 {
-    mutate_chance += random.generate_pos_neg(amount);
-    mutate_amount += random.generate_pos_neg(amount);
     baby_smell_amount += random.generate_pos_neg(amount);
     baby_threshold += random.generate_pos_neg(amount);
     baby_food += random.generate_pos_neg(amount);
@@ -168,8 +158,6 @@ static void add_affinities(SmellAffinity& a, SmellAffinity const& b)
 
 void Animal::add(Animal const& an)
 {
-    mutate_chance += an.mutate_chance;
-    mutate_amount += an.mutate_amount;
     baby_smell_amount += an.baby_smell_amount;
     baby_threshold += an.baby_threshold;
     baby_food += an.baby_food;
@@ -192,8 +180,6 @@ static void divide_affinity(SmellAffinity& aff, float d)
 
 void Animal::divide(float d)
 {
-    mutate_chance /= d;
-    mutate_amount /= d;
     baby_smell_amount /= d;
     baby_threshold /= d;
     baby_food /= d;
@@ -215,9 +201,7 @@ static void print_affinity(SmellAffinity const& aff, FILE* to)
 
 void Animal::print(FILE* to)
 {
-    fprintf(to, "{\"mutate_chance\":%f", mutate_chance);
-    fprintf(to, ",\"mutate_amount\":%f", mutate_amount);
-    fprintf(to, ",\"baby_smell_amount\":%f", baby_smell_amount);
+    fprintf(to, "{\"baby_smell_amount\":%f", baby_smell_amount);
     fprintf(to, ",\"baby_threshold\":%f", baby_threshold);
     fprintf(to, ",\"baby_food\":%f,\"plant_aff\":", baby_food);
     print_affinity(plant_aff, to);
