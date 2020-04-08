@@ -131,6 +131,7 @@ static void mutate_affinity(
     aff.plant_effect += random.generate_pos_neg(mutate_amount);
     aff.herb_effect += random.generate_pos_neg(mutate_amount);
     aff.carn_effect += random.generate_pos_neg(mutate_amount);
+    aff.baby_effect += random.generate_pos_neg(mutate_amount);
     aff.food_effect += random.generate_pos_neg(mutate_amount);
 }
 
@@ -153,6 +154,7 @@ static void add_affinities(SmellAffinity& a, SmellAffinity const& b)
     a.plant_effect += b.plant_effect;
     a.herb_effect += b.herb_effect;
     a.carn_effect += b.carn_effect;
+    a.baby_effect += b.baby_effect;
     a.food_effect += b.food_effect;
 }
 
@@ -175,6 +177,7 @@ static void divide_affinity(SmellAffinity& aff, float d)
     aff.plant_effect /= d;
     aff.herb_effect /= d;
     aff.carn_effect /= d;
+    aff.baby_effect /= d;
     aff.food_effect /= d;
 }
 
@@ -196,6 +199,7 @@ static void print_affinity(SmellAffinity const& aff, FILE* to)
     fprintf(to, ",\"plant_effect\":%f", aff.plant_effect);
     fprintf(to, ",\"herb_effect\":%f", aff.herb_effect);
     fprintf(to, ",\"carn_effect\":%f", aff.carn_effect);
+    fprintf(to, ",\"baby_effect\":%f", aff.baby_effect);
     fprintf(to, ",\"food_effect\":%f}", aff.food_effect);
 }
 
