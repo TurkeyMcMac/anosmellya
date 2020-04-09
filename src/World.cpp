@@ -21,7 +21,7 @@ World::World(unsigned width, unsigned height, Random const& random,
                 } else {
                     an.be_herb();
                 }
-                an.pos = Vec2D(x, y);
+                an.pos = Vec2D(x + 0.5, y + 0.5);
                 an.mutate(this->random, 100.);
             }
             animal.at(x, y) = an;
@@ -92,11 +92,11 @@ static void add_output_impulse(Vec2D& acc, Vec2D input,
     float out_x = in_cos * input.x - in_sin * input.y;
     float out_y = in_sin * input.x + in_cos * input.y;
     float out_hypot = hypot(out_x, out_y);
-    if (isfinite(out_hypot)) {
-        float offset = plant * aff.plant_effect + carn * aff.carn_effect
-            + herb * aff.herb_effect + baby * aff.baby_effect
-            + food * aff.food_effect;
-        float scalar = (out_hypot + offset) / out_hypot;
+    float offset = plant * aff.plant_effect + carn * aff.carn_effect
+        + herb * aff.herb_effect + baby * aff.baby_effect
+        + food * aff.food_effect;
+    float scalar = (out_hypot + offset) / out_hypot;
+    if (isfinite(scalar)) {
         acc.x += out_x * scalar;
         acc.y += out_y * scalar;
     }
@@ -255,10 +255,8 @@ void World::simulate()
 
 static uint8_t amount2color(float amount)
 {
-    amount *= 3.;
-    if (amount < 0.) {
-        return 0;
-    } else if (amount > 128.) {
+    amount = fabsf(amount * 3.);
+    if (amount > 128.) {
         return 128;
     } else {
         return (uint8_t)amount;

@@ -16,9 +16,8 @@ public:
     {
         static const uint32_t rand_table[16]
             = { 17, 11, 4, 15, 14, 2, 7, 1, 13, 11, 13, 14, 12, 15, 19, 5 };
-        uint32_t r = rotright(state, (state | 1) & 31) + rand_table[state % 16];
-        state = r;
-        return r;
+        state = rotright(state, (state | 1) & 31) + rand_table[state % 16];
+        return state;
     }
 
     float generate(float max)
