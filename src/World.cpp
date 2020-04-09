@@ -91,11 +91,11 @@ static void add_output_impulse(Vec2D& acc, Vec2D input,
     float out_x = in_cos * input.x - in_sin * input.y;
     float out_y = in_sin * input.x + in_cos * input.y;
     float out_hypot = hypot(out_x, out_y);
-    if (isfinite(out_hypot)) {
-        float offset = plant * aff.plant_effect + carn * aff.carn_effect
-            + herb * aff.herb_effect + baby * aff.baby_effect
-            + food * aff.food_effect;
-        float scalar = (out_hypot + offset) / out_hypot;
+    float offset = plant * aff.plant_effect + carn * aff.carn_effect
+        + herb * aff.herb_effect + baby * aff.baby_effect
+        + food * aff.food_effect;
+    float scalar = (out_hypot + offset) / out_hypot;
+    if (isfinite(scalar)) {
         acc.x += out_x * scalar;
         acc.y += out_y * scalar;
     }
