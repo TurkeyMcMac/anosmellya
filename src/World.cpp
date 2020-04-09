@@ -20,7 +20,7 @@ World::World(unsigned width, unsigned height, Random& random,
                 } else {
                     an.be_herb();
                 }
-                an.pos = Vec2D(x, y);
+                an.pos = Vec2D(x + 0.5, y + 0.5);
                 an.mutate(random, 100.);
             }
             animal.at(x, y) = an;
