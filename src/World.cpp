@@ -3,9 +3,10 @@
 
 using namespace anosmellya;
 
-World::World(unsigned width, unsigned height, Random& random,
+World::World(unsigned width, unsigned height, Random const& random,
     float animal_chance, float carn_chance)
-    : animal(width, height)
+    : random(random)
+    , animal(width, height)
     , plant(width, height, 0.)
     , herb(width, height, 0.)
     , carn(width, height, 0.)
@@ -14,14 +15,14 @@ World::World(unsigned width, unsigned height, Random& random,
     for (unsigned y = 0; y < height; ++y) {
         for (unsigned x = 0; x < width; ++x) {
             Animal an;
-            if (animal_chance > random.generate(1.)) {
-                if (carn_chance > random.generate(1.)) {
+            if (animal_chance > this->random.generate(1.)) {
+                if (carn_chance > this->random.generate(1.)) {
                     an.be_carn();
                 } else {
                     an.be_herb();
                 }
                 an.pos = Vec2D(x, y);
-                an.mutate(random, 100.);
+                an.mutate(this->random, 100.);
             }
             animal.at(x, y) = an;
         }
@@ -230,7 +231,7 @@ static void tick_animal(Random& random, unsigned x, unsigned y,
     }
 }
 
-void World::simulate(Random& random)
+void World::simulate()
 {
     disperse(plant, 0.07);
     evaporate(plant, 0.001);

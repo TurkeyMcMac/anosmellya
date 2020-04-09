@@ -36,7 +36,7 @@ static void simulate(SDL_Renderer* renderer)
         fflush(stdout);
         world.draw(renderer);
         SDL_RenderPresent(renderer);
-        world.simulate(random);
+        world.simulate();
         Uint32 new_ticks = SDL_GetTicks();
         if (new_ticks - ticks < 60) {
             SDL_Delay(60 - (new_ticks - ticks));

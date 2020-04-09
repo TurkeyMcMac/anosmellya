@@ -24,20 +24,21 @@ struct Statistics {
 
 class World {
 public:
-    World(unsigned width, unsigned height, Random& random, float animal_chance,
-        float carn_chance);
+    World(unsigned width, unsigned height, Random const& random,
+        float animal_chance, float carn_chance);
 
     unsigned get_width();
 
     unsigned get_height();
 
-    void simulate(Random& random);
+    void simulate();
 
     void draw(SDL_Renderer* renderer);
 
     void get_statistics(Statistics& stats);
 
 private:
+    Random random;
     Grid<Animal> animal;
     Grid<float> plant;
     Grid<float> herb;
