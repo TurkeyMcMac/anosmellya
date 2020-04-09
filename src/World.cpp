@@ -255,7 +255,7 @@ void World::simulate()
 
 static uint8_t amount2color(float amount)
 {
-    amount = fabsf(amount * 3.);
+    amount = fabs(amount * 3.);
     if (amount > 128.) {
         return 128;
     } else {
