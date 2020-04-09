@@ -254,10 +254,8 @@ void World::simulate(Random& random)
 
 static uint8_t amount2color(float amount)
 {
-    amount *= 3.;
-    if (amount < 0.) {
-        return 0;
-    } else if (amount > 128.) {
+    amount = fabsf(amount * 3.);
+    if (amount > 128.) {
         return 128;
     } else {
         return (uint8_t)amount;
