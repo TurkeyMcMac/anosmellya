@@ -33,6 +33,7 @@ static void simulate(SDL_Renderer* renderer)
         }
         world.get_statistics(stats);
         stats.print(stdout);
+        putchar('\n');
         fflush(stdout);
         world.draw(renderer);
         SDL_RenderPresent(renderer);
