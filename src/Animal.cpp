@@ -160,6 +160,7 @@ static void add_affinities(SmellAffinity& a, SmellAffinity const& b)
 
 void Animal::add(Animal const& an)
 {
+    age += an.age;
     baby_smell_amount += an.baby_smell_amount;
     baby_threshold += an.baby_threshold;
     baby_food += an.baby_food;
@@ -183,6 +184,7 @@ static void divide_affinity(SmellAffinity& aff, float d)
 
 void Animal::divide(float d)
 {
+    age /= d;
     baby_smell_amount /= d;
     baby_threshold /= d;
     baby_food /= d;
@@ -205,7 +207,8 @@ static void print_affinity(SmellAffinity const& aff, FILE* to)
 
 void Animal::print(FILE* to)
 {
-    fprintf(to, "{\"baby_smell_amount\":%f", baby_smell_amount);
+    fprintf(to, "{\"age\":%u", age);
+    fprintf(to, ",\"baby_smell_amount\":%f", baby_smell_amount);
     fprintf(to, ",\"baby_threshold\":%f", baby_threshold);
     fprintf(to, ",\"baby_food\":%f,\"plant_aff\":", baby_food);
     print_affinity(plant_aff, to);
