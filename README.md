@@ -31,7 +31,7 @@ The format is the same as for a configuration file.
 
 ### Statistics
 
-The `-print-stats` option enables statistics printed every tick.
+The `-print-stats` option enables statistics to be printed.
 Each tick, a JSON object is printed on a new line of standard output.
 The fields are as follows:
 
@@ -99,7 +99,7 @@ Plants are dropped in globs and are eaten by herbivores.
 Plants do not grow, but rather evaporate like all other smells.
 * Herbivore smell:
 Herbivores produce a fixed amount of smell every tick.
-This lets them find kind and carnivores find prey.
+This lets herbivores find kin and carnivores find prey.
 * Carnivore smell:
 Carnivores also produce smell for a similar purpose.
 * Baby smell:
@@ -112,17 +112,17 @@ Note that one baby smell is shared between herbivores and carnivores.
 
 You can see the full list of traits that evolve by looking at `Animal::mutate`
 in `src/Animal.cpp`.
-The main evolving traits are the "smell affinities".
+The main evolving traits are the "smell affinities."
 A smell affinity has several parts.
 The main part is the "impulse," a 2D vector quantity.
 An animal looks at the four adjacent squares and determines a smell gradient.
 The impulse is rotated so that the smell gradient vector becomes the x-axis.
-The impulse is changed scaled based on several coefficients.
+The impulse is changed based on several coefficients.
 The coefficients correspond to all the smells on the current tile as well as the
 animal's amount of food.
 The coefficients are multiplied by their respective quantities then added to the
 magnitude of the impulse.
-The accelerated for a tick is the sum of all scaled impulses, normalized to a
+The acceleration for a tick is the sum of all scaled impulses, normalized to a
 configurable amount.
 There are smell affinities for each of the smells.
 There is also one where the input is the animal's velocity vector rather than a
