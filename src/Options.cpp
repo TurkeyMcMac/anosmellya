@@ -1,6 +1,6 @@
 #include "Options.hpp"
-#include "Random.hpp"
 #include ".version.hpp"
+#include "Random.hpp"
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -106,7 +106,7 @@ Options::Options(int argc, char* argv[])
             world_width = get_num_arg(argv, i, 1, 1000000);
         } else if (!strcmp(opt, "-world-height")) {
             world_height = get_num_arg(argv, i, 1, 1000000);
-	} else if (!strcmp(opt, "-seed")) {
+        } else if (!strcmp(opt, "-seed")) {
             seed = get_num_arg(argv, i, 0, Random::MAX_INT);
         } else if (!strcmp(opt, "-draw")) {
             draw = true;
