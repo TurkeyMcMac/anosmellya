@@ -20,6 +20,7 @@ struct Statistics {
     float carn_total;
     float baby_total;
 
+    // Print the information as JSON to the file.
     void print(FILE* to);
 };
 
@@ -32,10 +33,13 @@ public:
 
     unsigned get_height();
 
+    // Simulate one tick.
     void simulate();
 
+    // Draw the world with the renderer.
     void draw(SDL_Renderer* renderer);
 
+    // Collect statistics and put them into the stats struct.
     void get_statistics(Statistics& stats);
 
 private:

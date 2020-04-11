@@ -35,6 +35,7 @@ public:
 
     T& at(unsigned x, unsigned y) { return tiles[y * width + x]; }
 
+    // Offset x and y by ox and oy units, respectively, wrapping if needed.
     void trans(unsigned& x, unsigned& y, int ox, int oy)
     {
         ox %= width;
@@ -42,12 +43,15 @@ public:
         small_trans(x, y, ox, oy);
     }
 
+    // Translate and fetch.
     T& at_trans(unsigned x, unsigned y, int ox, int oy)
     {
         trans(x, y, ox, oy);
         return at(x, y);
     }
 
+    // Same as trans, but ox and oy must have absolute values less than width
+    // and height, respectively.
     void small_trans(unsigned& x, unsigned& y, int ox, int oy)
     {
         if (ox < 0) {
@@ -80,6 +84,7 @@ public:
         }
     }
 
+    // Small translate and fetch.
     T& at_small_trans(unsigned x, unsigned y, int ox, int oy)
     {
         small_trans(x, y, ox, oy);

@@ -15,26 +15,43 @@ struct SmellAffinity {
     float baby_effect;
     float food_effect;
 
+    // Construct a smell affinity with all zeroes.
     SmellAffinity();
 
+    // Copy a smell affinity.
     SmellAffinity(SmellAffinity const& copy);
 };
 
 struct Animal {
+    // Construct an animal with all zeroes.
     Animal();
 
+    // Construct an animal with a random mix of traits from the mother and
+    // father. The new animal has the position and velocity of the mother. Its
+    // starting food is the minimum of the mother's food and the mother's baby
+    // food, or zero if the quantity would otherwise be negative. No food is
+    // taken from the mother. The child is never a mutant.
     Animal(Random& random, Animal const& mother, Animal const& father);
 
+    // Initialize an animal to be a decent starting carnivore. The position must
+    // be set after this.
     void be_carn();
 
+    // Initialize an animal to be a decent starting herbivore. The position must
+    // be set after this.
     void be_herb();
 
+    // Mutate all traits by a quantity between -amount and +amount.
     void mutate(Random& random, float amount);
 
+    // Add all statistically relevant traits of this animal and the other.
     void add(Animal const& an);
 
+    // Divide all statistically relevant traits of this animal by the positive
+    // divisor d.
     void divide(float d);
 
+    // Print all statistically relevant traits to the file.
     void print(FILE* to);
 
     static constexpr float MUTATE_CHANCE = 0.05;
@@ -46,7 +63,9 @@ struct Animal {
     Vec2D vel;
     float food;
     unsigned age;
+    // Whether there is a living animal in this animal's place.
     bool is_present;
+    // Whether the animal was moved this tick already.
     bool just_moved;
     /* GENETICS */
     bool is_carn;
