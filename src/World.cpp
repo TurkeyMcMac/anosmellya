@@ -294,6 +294,76 @@ void World::draw(SDL_Renderer* renderer)
         for (unsigned x = 0; x < get_width(); ++x) {
             Animal const& an = animal.at(x, y);
             if (an.is_present) {
+                float plant_here = plant.at(x, y);
+                float carn_here = carn.at(x, y);
+                float herb_here = herb.at(x, y);
+                float baby_here = baby.at(x, y);
+                float max_acc = 0.;
+                // plant
+                Vec2D plant_acc(0., 0.);
+                add_output_impulse(plant_acc, get_smell(plant, x, y),
+                    an.plant_aff, plant_here, carn_here, herb_here, baby_here,
+                    an.food);
+                max_acc = fmaxf(max_acc, hypotf(plant_acc.x, plant_acc.y));
+                // herb
+                Vec2D herb_acc(0., 0.);
+                add_output_impulse(herb_acc, get_smell(herb, x, y), an.herb_aff,
+                    plant_here, carn_here, herb_here, baby_here, an.food);
+                max_acc = fmaxf(max_acc, hypotf(herb_acc.x, herb_acc.y));
+                // carn
+                Vec2D carn_acc(0., 0.);
+                add_output_impulse(carn_acc, get_smell(carn, x, y), an.carn_aff,
+                    plant_here, carn_here, herb_here, baby_here, an.food);
+                max_acc = fmaxf(max_acc, hypotf(carn_acc.x, carn_acc.y));
+                // baby
+                Vec2D baby_acc(0., 0.);
+                add_output_impulse(baby_acc, get_smell(baby, x, y), an.baby_aff,
+                    plant_here, carn_here, herb_here, baby_here, an.food);
+                max_acc = fmaxf(max_acc, hypotf(baby_acc.x, baby_acc.y));
+                // vel
+                Vec2D vel_acc(0., 0.);
+                add_output_impulse(vel_acc, an.vel, an.vel_aff, plant_here,
+                    carn_here, herb_here, baby_here, an.food);
+                max_acc = fmaxf(max_acc, hypotf(vel_acc.x, vel_acc.y));
+                if (max_acc > 0.) {
+                    int x1 = an.pos.x * tile.w;
+                    int y1 = an.pos.y * tile.h;
+                    int x2;
+                    int y2;
+                    float scalar = 3. / max_acc;
+                    // plant
+                    SDL_SetRenderDrawColor(renderer, 0, 200, 0, 255);
+                    x2 = x1 + plant_acc.x * scalar * tile.w;
+                    y2 = y1 + plant_acc.y * scalar * tile.h;
+                    SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+                    // herb
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 200, 255);
+                    x2 = x1 + herb_acc.x * scalar * tile.w;
+                    y2 = y1 + herb_acc.y * scalar * tile.h;
+                    SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+                    // carn
+                    SDL_SetRenderDrawColor(renderer, 200, 0, 0, 255);
+                    x2 = x1 + carn_acc.x * scalar * tile.w;
+                    y2 = y1 + carn_acc.y * scalar * tile.h;
+                    SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+                    // baby
+                    SDL_SetRenderDrawColor(renderer, 200, 0, 200, 255);
+                    x2 = x1 + baby_acc.x * scalar * tile.w;
+                    y2 = y1 + baby_acc.y * scalar * tile.h;
+                    SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+                    // vel
+                    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+                    x2 = x1 + vel_acc.x * scalar * tile.w;
+                    y2 = y1 + vel_acc.y * scalar * tile.h;
+                    SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+                }
+            }
+        }
+    }
+    for (unsigned y = 0; y < get_height(); ++y) {
+        for (unsigned x = 0; x < get_width(); ++x) {
+            Animal const& an = animal.at(x, y);
+            if (an.is_present) {
                 uint8_t red = an.is_carn ? 255 : 0;
                 uint8_t blue = an.is_carn ? 0 : 255;
                 tile.x = (an.pos.x - 0.5) * tile.w;
