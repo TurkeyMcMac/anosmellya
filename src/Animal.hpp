@@ -54,10 +54,6 @@ struct Animal {
     // Print all statistically relevant traits to the file.
     void print(FILE* to);
 
-    static constexpr float MUTATE_CHANCE = 0.05;
-
-    static constexpr float MUTATE_AMOUNT = 4.;
-
     /* INDIVIDUAL ATTRIBUTES */
     Vec2D pos;
     Vec2D vel;
