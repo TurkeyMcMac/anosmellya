@@ -1,3 +1,4 @@
+#include "Config.hpp"
 #include "World.hpp"
 #include <errno.h>
 #include <stdio.h>
@@ -16,13 +17,13 @@ static bool is_quit_event(SDL_Event& event)
         || (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_q);
 }
 
-static void simulate(SDL_Renderer* renderer)
+static void simulate(SDL_Renderer* renderer, Config const& conf)
 {
     SDL_Event event;
     SDL_Rect screen_dims;
     SDL_RenderGetViewport(renderer, &screen_dims);
     Random random((uint32_t)time(NULL));
-    World world(WORLD_WIDTH, WORLD_HEIGHT, random, 0.1, 0.1);
+    World world(WORLD_WIDTH, WORLD_HEIGHT, random, conf);
     Statistics stats;
     for (;;) {
         Uint32 ticks = SDL_GetTicks();
@@ -47,6 +48,12 @@ static void simulate(SDL_Renderer* renderer)
 
 int main(int argc, char* argv[])
 {
+    Config conf;
+    for (int i = 1; i < argc; ++i) {
+        if (conf.parse(argv[i])) {
+            exit(EXIT_FAILURE);
+        }
+    }
     int status = EXIT_FAILURE;
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
@@ -79,7 +86,7 @@ int main(int argc, char* argv[])
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
     }
-    simulate(renderer);
+    simulate(renderer, conf);
     status = EXIT_SUCCESS;
     SDL_DestroyRenderer(renderer);
 error_create_surface:

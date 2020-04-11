@@ -3,9 +3,10 @@
 
 using namespace anosmellya;
 
-World::World(unsigned width, unsigned height, Random const& random,
-    float animal_chance, float carn_chance)
+World::World(
+    unsigned width, unsigned height, Random const& random, Config const& conf)
     : random(random)
+    , conf(conf)
     , animal(width, height)
     , plant(width, height, 0.)
     , herb(width, height, 0.)
@@ -15,14 +16,14 @@ World::World(unsigned width, unsigned height, Random const& random,
     for (unsigned y = 0; y < height; ++y) {
         for (unsigned x = 0; x < width; ++x) {
             Animal an;
-            if (animal_chance > this->random.generate(1.)) {
-                if (carn_chance > this->random.generate(1.)) {
+            if (conf.initial_animal_chance > this->random.generate(1.)) {
+                if (conf.initial_carn_chance > this->random.generate(1.)) {
                     an.be_carn();
                 } else {
                     an.be_herb();
                 }
                 an.pos = Vec2D(x + 0.5, y + 0.5);
-                an.mutate(this->random, 100.);
+                an.mutate(this->random, conf.initial_variation);
             }
             animal.at(x, y) = an;
         }
@@ -133,8 +134,8 @@ static bool find_empty_space(Grid<Animal>& animal, unsigned& x, unsigned& y)
     return false;
 }
 
-static void make_baby(Random& random, Grid<Animal>& animal, unsigned mom_x,
-    unsigned mom_y, Animal& dad)
+static void make_baby(Random& random, Config const& conf, Grid<Animal>& animal,
+    unsigned mom_x, unsigned mom_y, Animal& dad)
 {
     unsigned kid_x = mom_x;
     unsigned kid_y = mom_y;
@@ -142,8 +143,8 @@ static void make_baby(Random& random, Grid<Animal>& animal, unsigned mom_x,
         Animal& mom = animal.at(mom_x, mom_y);
         Animal kid(random, mom, dad);
         mom.food -= kid.food;
-        if (Animal::MUTATE_CHANCE > random.generate(1.)) {
-            kid.mutate(random, Animal::MUTATE_AMOUNT);
+        if (conf.mutate_chance > random.generate(1.)) {
+            kid.mutate(random, conf.mutate_amount);
         }
         kid.pos = Vec2D(kid_x + 0.5, kid_y + 0.5);
         kid.just_moved = kid_y > mom_y || kid_x > mom_x;
@@ -151,8 +152,8 @@ static void make_baby(Random& random, Grid<Animal>& animal, unsigned mom_x,
     }
 }
 
-static void tick_animal(Random& random, unsigned x, unsigned y,
-    Grid<Animal>& animal, Grid<float>& plant, Grid<float>& carn,
+static void tick_animal(Random& random, Config const& conf, unsigned x,
+    unsigned y, Grid<Animal>& animal, Grid<float>& plant, Grid<float>& carn,
     Grid<float>& herb, Grid<float>& baby)
 {
     Animal& an = animal.at(x, y);
@@ -165,7 +166,7 @@ static void tick_animal(Random& random, unsigned x, unsigned y,
     }
     ++an.age;
     --an.food;
-    if (an.age > 500 || !(an.food >= 0.)) {
+    if (an.age >= conf.lifespan || !(an.food >= 0.)) {
         an.is_present = false;
         return;
     }
@@ -186,13 +187,13 @@ static void tick_animal(Random& random, unsigned x, unsigned y,
         carn_here, herb_here, baby_here, an.food);
     add_output_impulse(acc, an.vel, an.vel_aff, plant_here, carn_here,
         herb_here, baby_here, an.food);
-    float acc_divisor = hypot(acc.x, acc.y) * 20.;
+    float acc_divisor = hypot(acc.x, acc.y);
     if (acc_divisor != 0.) {
-        an.vel.x += acc.x / acc_divisor;
-        an.vel.y += acc.y / acc_divisor;
+        an.vel.x += acc.x / acc_divisor * conf.acceleration;
+        an.vel.y += acc.y / acc_divisor * conf.acceleration;
     }
-    an.vel.x *= 0.97;
-    an.vel.y *= 0.97;
+    an.vel.x *= 1. - conf.friction;
+    an.vel.y *= 1. - conf.friction;
     an.pos.x += an.vel.x;
     an.pos.y += an.vel.y;
     wrap(an.pos.x, animal.get_width());
@@ -203,27 +204,29 @@ static void tick_animal(Random& random, unsigned x, unsigned y,
         baby.at(tx, ty) += an.baby_smell_amount;
     }
     if (an.is_carn) {
-        carn.at(tx, ty) += 1.;
+        carn.at(tx, ty) += conf.carn_amount;
     } else {
-        float eat = plant.at(tx, ty) / 2.;
+        float eat = plant.at(tx, ty) * conf.herb_eat_portion;
         an.food += eat;
         plant.at(tx, ty) -= eat;
-        herb.at(tx, ty) += 1.;
+        herb.at(tx, ty) += conf.herb_amount;
     }
     if (tx != x || ty != y) {
         Animal& target = animal.at(tx, ty);
         if (target.is_present) {
             if (an.is_carn && !target.is_carn) {
-                an.food += target.food / 2.;
-                target.food /= 2.;
+                float eat = target.food * conf.carn_eat_portion;
+                an.food += eat;
+                target.food -= eat;
             } else if (!an.is_carn && target.is_carn) {
-                target.food += an.food / 2.;
-                an.food /= 2.;
+                float eat = an.food * conf.carn_eat_portion;
+                target.food += eat;
+                an.food -= eat;
             } else {
                 if (is_receptive(target)) {
-                    make_baby(random, animal, tx, ty, an);
+                    make_baby(random, conf, animal, tx, ty, an);
                 } else if (is_receptive(an)) {
-                    make_baby(random, animal, x, y, target);
+                    make_baby(random, conf, animal, x, y, target);
                 }
             }
             an.pos = pos_orig;
@@ -238,23 +241,26 @@ static void tick_animal(Random& random, unsigned x, unsigned y,
 
 void World::simulate()
 {
-    disperse(plant, 0.07);
-    evaporate(plant, 0.001);
-    disperse(herb, 0.4);
-    evaporate(herb, 0.0005);
-    disperse(carn, 0.4);
-    evaporate(carn, 0.0005);
-    disperse(baby, 0.2);
-    evaporate(baby, 0.001);
+    disperse(plant, conf.plant_dispersal);
+    evaporate(plant, conf.plant_evap);
+    disperse(herb, conf.herb_dispersal);
+    evaporate(herb, conf.herb_evap);
+    disperse(carn, conf.carn_dispersal);
+    evaporate(carn, conf.carn_evap);
+    disperse(baby, conf.baby_dispersal);
+    evaporate(baby, conf.baby_evap);
     for (unsigned y = 0; y < get_height(); ++y) {
         for (unsigned x = 0; x < get_width(); ++x) {
-            tick_animal(random, x, y, animal, plant, carn, herb, baby);
+            tick_animal(random, conf, x, y, animal, plant, carn, herb, baby);
         }
     }
-    for (unsigned i = 0; i < 4; ++i) {
+    for (unsigned i = 0;
+         i < get_width() * get_height() * conf.plant_place_chance
+             + random.generate(1.);
+         ++i) {
         plant.at(
             random.generate() % get_width(), random.generate() % get_height())
-            += 800.;
+            += conf.plant_place_amount;
     }
 }
 

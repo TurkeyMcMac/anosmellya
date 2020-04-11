@@ -2,6 +2,7 @@
 #define ANOSMELLYA_WORLD_H_
 
 #include "Animal.hpp"
+#include "Config.hpp"
 #include "Grid.hpp"
 #include "Random.hpp"
 #include <SDL2/SDL.h>
@@ -25,7 +26,7 @@ struct Statistics {
 class World {
 public:
     World(unsigned width, unsigned height, Random const& random,
-        float animal_chance, float carn_chance);
+        Config const& conf);
 
     unsigned get_width();
 
@@ -39,6 +40,7 @@ public:
 
 private:
     Random random;
+    Config conf;
     Grid<Animal> animal;
     Grid<float> plant;
     Grid<float> herb;
