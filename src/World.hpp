@@ -29,6 +29,10 @@ public:
     World(unsigned width, unsigned height, Random const& random,
         Config const& conf);
 
+    World();
+
+    void copy(World const& copy);
+
     unsigned get_width();
 
     unsigned get_height();

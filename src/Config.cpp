@@ -34,6 +34,8 @@ Config::Config()
 {
 }
 
+void Config::copy(Config const& conf) { *this = conf; }
+
 static size_t skip_space(std::string& line, size_t i)
 {
     while (i < line.length() && isspace(line[i])) {

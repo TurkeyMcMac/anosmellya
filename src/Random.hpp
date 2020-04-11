@@ -12,6 +12,13 @@ public:
     {
     }
 
+    Random()
+        : state(0)
+    {
+    }
+
+    void copy(Random const& copy) { state = copy.state; }
+
     uint32_t generate()
     {
         static const uint32_t rand_table[16]

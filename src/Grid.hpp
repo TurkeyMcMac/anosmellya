@@ -2,6 +2,7 @@
 #define ANOSMELLYA_GRID_H_
 
 #include <stdlib.h>
+#include <string.h>
 
 namespace anosmellya {
 
@@ -32,6 +33,17 @@ public:
     }
 
     ~Grid() { free(tiles); }
+
+    void copy(Grid<T> const& copy)
+    {
+        if (width != copy.width || height != copy.height) {
+            width = copy.width;
+            height = copy.height;
+            free(tiles);
+            tiles = (T*)malloc(width * height * sizeof(T));
+        }
+        memcpy(tiles, copy.tiles, width * height * sizeof(T));
+    }
 
     T& at(unsigned x, unsigned y) { return tiles[y * width + x]; }
 

@@ -15,30 +15,81 @@ static bool is_quit_event(SDL_Event& event)
         || (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_q);
 }
 
+static void lock(SDL_mutex* mtx, const char* role)
+{
+    if (SDL_LockMutex(mtx)) {
+        fprintf(stderr, "%s failed to lock mutex; %s\n", role, SDL_GetError());
+        exit(EXIT_FAILURE);
+    }
+}
+
+struct SimThreadShared {
+    World world;
+    SDL_mutex* world_mtx;
+    SDL_sem* tick_sem;
+    bool done;
+};
+
+static int sim_thread_loop(void* arg)
+{
+    SimThreadShared* shared = (SimThreadShared*)arg;
+    for (;;) {
+        SDL_SemWait(shared->tick_sem);
+        lock(shared->world_mtx, "Child");
+        if (shared->done) {
+            SDL_UnlockMutex(shared->world_mtx);
+            return 0;
+        }
+        shared->world.simulate();
+        SDL_UnlockMutex(shared->world_mtx);
+    }
+}
+
 static void simulate(SDL_Renderer* renderer, Options const& opts)
 {
     SDL_Event event;
     Random random(opts.seed);
-    World world(opts.world_width, opts.world_height, random, opts.conf);
+    SDL_Thread* sim_thread;
+    SimThreadShared shared
+        = { World(opts.world_width, opts.world_height, random, opts.conf),
+              SDL_CreateMutex(), SDL_CreateSemaphore(0), false };
+    if (!shared.world_mtx || !shared.tick_sem
+        || !(sim_thread = SDL_CreateThread(
+                 sim_thread_loop, "AnosmellyaSimThread", (void*)&shared))) {
+        fprintf(
+            stderr, "Failed to allocate thread stuff; %s\n", SDL_GetError());
+        exit(EXIT_FAILURE);
+    }
     Statistics stats;
+    World my_world;
     for (;;) {
         Uint32 ticks = SDL_GetTicks();
+        lock(shared.world_mtx, "Parent");
+        my_world.copy(shared.world);
+        SDL_UnlockMutex(shared.world_mtx);
+        SDL_SemPost(shared.tick_sem);
         while (SDL_PollEvent(&event)) {
             if (is_quit_event(event)) {
+                lock(shared.world_mtx, "Parent");
+                shared.done = true;
+                SDL_UnlockMutex(shared.world_mtx);
+		SDL_SemPost(shared.tick_sem);
+                SDL_WaitThread(sim_thread, NULL);
+                SDL_DestroyMutex(shared.world_mtx);
+                SDL_DestroySemaphore(shared.tick_sem);
                 return;
             }
         }
         if (opts.print_stats) {
-            world.get_statistics(stats);
+            my_world.get_statistics(stats);
             stats.print(stdout);
             putchar('\n');
             fflush(stdout);
         }
         if (opts.draw) {
-            world.draw(renderer);
+            my_world.draw(renderer);
             SDL_RenderPresent(renderer);
         }
-        world.simulate();
         Uint32 new_ticks = SDL_GetTicks();
         if (new_ticks - ticks < opts.frame_delay) {
             SDL_Delay(opts.frame_delay - (new_ticks - ticks));

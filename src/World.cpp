@@ -30,6 +30,28 @@ World::World(
     }
 }
 
+World::World()
+    : random()
+    , conf()
+    , animal()
+    , plant()
+    , herb()
+    , carn()
+    , baby()
+{
+}
+
+void World::copy(World const& copy)
+{
+    random.copy(copy.random);
+    conf.copy(copy.conf);
+    animal.copy(copy.animal);
+    plant.copy(copy.plant);
+    herb.copy(copy.herb);
+    carn.copy(copy.carn);
+    baby.copy(copy.baby);
+}
+
 unsigned World::get_width() { return animal.get_width(); }
 
 unsigned World::get_height() { return animal.get_height(); }
