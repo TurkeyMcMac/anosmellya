@@ -333,8 +333,12 @@ void World::get_statistics(Statistics& stats)
             stats.baby_total += baby.at(x, y);
         }
     }
-    stats.herb_avg.divide((float)stats.herb_count);
-    stats.carn_avg.divide((float)stats.carn_count);
+    if (stats.herb_count > 0) {
+        stats.herb_avg.divide((float)stats.herb_count);
+    }
+    if (stats.carn_count > 0) {
+        stats.carn_avg.divide((float)stats.carn_count);
+    }
 }
 
 void Statistics::print(FILE* to)
