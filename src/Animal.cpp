@@ -61,7 +61,7 @@ static SmellAffinity pick_aff(
     return aff;
 }
 
-Animal::Animal(Random& random, Animal& mother, Animal& father)
+Animal::Animal(Random& random, Animal const& mother, Animal const& father)
     : pos(mother.pos)
     , vel(mother.vel)
     , food(fmaxf(0., fminf(mother.baby_food, mother.food)))
@@ -78,10 +78,6 @@ Animal::Animal(Random& random, Animal& mother, Animal& father)
     , baby_aff(pick_aff(random, mother.baby_aff, father.baby_aff))
     , vel_aff(pick_aff(random, mother.vel_aff, father.vel_aff))
 {
-    mother.food -= food;
-    if (Animal::MUTATE_CHANCE > random.generate(1.)) {
-        mutate(random, Animal::MUTATE_AMOUNT);
-    }
 }
 
 void Animal::be_carn()

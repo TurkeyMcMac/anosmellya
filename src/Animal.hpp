@@ -23,7 +23,7 @@ struct SmellAffinity {
 struct Animal {
     Animal();
 
-    Animal(Random& random, Animal& mother, Animal& father);
+    Animal(Random& random, Animal const& mother, Animal const& father);
 
     void be_carn();
 

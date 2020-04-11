@@ -139,7 +139,12 @@ static void make_baby(Random& random, Grid<Animal>& animal, unsigned mom_x,
     unsigned kid_x = mom_x;
     unsigned kid_y = mom_y;
     if (find_empty_space(animal, kid_x, kid_y)) {
-        Animal kid(random, animal.at(mom_x, mom_y), dad);
+        Animal& mom = animal.at(mom_x, mom_y);
+        Animal kid(random, mom, dad);
+        mom.food -= kid.food;
+        if (Animal::MUTATE_CHANCE > random.generate(1.)) {
+            kid.mutate(random, Animal::MUTATE_AMOUNT);
+        }
         kid.pos = Vec2D(kid_x + 0.5, kid_y + 0.5);
         kid.just_moved = kid_y > mom_y || kid_x > mom_x;
         animal.at(kid_x, kid_y) = kid;
