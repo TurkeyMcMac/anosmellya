@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
             && !strcmp(renderer_info.name, "metal")) {
             SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
         }
-        window = SDL_CreateWindow("Intergrid", SDL_WINDOWPOS_CENTERED,
+        window = SDL_CreateWindow("Anosmellya", SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED, WORLD_WIDTH * 3, WORLD_HEIGHT * 3,
             SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
         if (!window) {
