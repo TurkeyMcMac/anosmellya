@@ -285,11 +285,8 @@ void World::draw(SDL_Renderer* renderer)
         for (unsigned x = 0; x < get_width(); ++x) {
             tile.x = (int)x * tile.w;
             tile.y = (int)y * tile.h;
-            SDL_SetRenderDrawColor(renderer,
-                amount2color(carn.at(x, y)) + amount2color(baby.at(x, y)) / 4,
-                amount2color(plant.at(x, y)),
-                amount2color(herb.at(x, y)) + amount2color(baby.at(x, y)) / 4,
-                255);
+            SDL_SetRenderDrawColor(renderer, amount2color(carn.at(x, y)),
+                amount2color(plant.at(x, y)), amount2color(herb.at(x, y)), 255);
             SDL_RenderFillRect(renderer, &tile);
         }
     }
