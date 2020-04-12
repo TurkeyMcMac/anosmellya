@@ -36,8 +36,11 @@ public:
     // Simulate one tick.
     void simulate();
 
-    // Draw the world with the renderer.
-    void draw(SDL_Renderer* renderer);
+    void draw_smells(SDL_Renderer* renderer);
+
+    void draw_affs(SDL_Renderer* renderer);
+
+    void draw_animals(SDL_Renderer* renderer);
 
     // Collect statistics and put them into the stats struct.
     void get_statistics(Statistics& stats);

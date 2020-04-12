@@ -274,7 +274,7 @@ static uint8_t amount2color(float amount)
     }
 }
 
-void World::draw(SDL_Renderer* renderer)
+void World::draw_smells(SDL_Renderer* renderer)
 {
     SDL_Rect viewport;
     SDL_RenderGetViewport(renderer, &viewport);
@@ -290,6 +290,14 @@ void World::draw(SDL_Renderer* renderer)
             SDL_RenderFillRect(renderer, &tile);
         }
     }
+}
+
+void World::draw_affs(SDL_Renderer* renderer)
+{
+    SDL_Rect viewport;
+    SDL_RenderGetViewport(renderer, &viewport);
+    int tw = viewport.w / get_width();
+    int th = viewport.h / get_height();
     for (unsigned y = 0; y < get_height(); ++y) {
         for (unsigned x = 0; x < get_width(); ++x) {
             Animal const& an = animal.at(x, y);
@@ -326,40 +334,49 @@ void World::draw(SDL_Renderer* renderer)
                     carn_here, herb_here, baby_here, an.food);
                 max_acc = fmaxf(max_acc, hypotf(vel_acc.x, vel_acc.y));
                 if (max_acc > 0.) {
-                    int x1 = an.pos.x * tile.w;
-                    int y1 = an.pos.y * tile.h;
+                    int x1 = an.pos.x * tw;
+                    int y1 = an.pos.y * th;
                     int x2;
                     int y2;
                     float scalar = 3. / max_acc;
                     // plant
                     SDL_SetRenderDrawColor(renderer, 0, 200, 0, 255);
-                    x2 = x1 + plant_acc.x * scalar * tile.w;
-                    y2 = y1 + plant_acc.y * scalar * tile.h;
+                    x2 = x1 + plant_acc.x * scalar * tw;
+                    y2 = y1 + plant_acc.y * scalar * th;
                     SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
                     // herb
                     SDL_SetRenderDrawColor(renderer, 0, 0, 200, 255);
-                    x2 = x1 + herb_acc.x * scalar * tile.w;
-                    y2 = y1 + herb_acc.y * scalar * tile.h;
+                    x2 = x1 + herb_acc.x * scalar * tw;
+                    y2 = y1 + herb_acc.y * scalar * th;
                     SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
                     // carn
                     SDL_SetRenderDrawColor(renderer, 200, 0, 0, 255);
-                    x2 = x1 + carn_acc.x * scalar * tile.w;
-                    y2 = y1 + carn_acc.y * scalar * tile.h;
+                    x2 = x1 + carn_acc.x * scalar * tw;
+                    y2 = y1 + carn_acc.y * scalar * th;
                     SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
                     // baby
                     SDL_SetRenderDrawColor(renderer, 200, 0, 200, 255);
-                    x2 = x1 + baby_acc.x * scalar * tile.w;
-                    y2 = y1 + baby_acc.y * scalar * tile.h;
+                    x2 = x1 + baby_acc.x * scalar * tw;
+                    y2 = y1 + baby_acc.y * scalar * th;
                     SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
                     // vel
                     SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
-                    x2 = x1 + vel_acc.x * scalar * tile.w;
-                    y2 = y1 + vel_acc.y * scalar * tile.h;
+                    x2 = x1 + vel_acc.x * scalar * tw;
+                    y2 = y1 + vel_acc.y * scalar * th;
                     SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
                 }
             }
         }
     }
+}
+
+void World::draw_animals(SDL_Renderer* renderer)
+{
+    SDL_Rect viewport;
+    SDL_RenderGetViewport(renderer, &viewport);
+    SDL_Rect tile;
+    tile.w = viewport.w / get_width();
+    tile.h = viewport.h / get_height();
     for (unsigned y = 0; y < get_height(); ++y) {
         for (unsigned x = 0; x < get_width(); ++x) {
             Animal const& an = animal.at(x, y);
