@@ -20,6 +20,7 @@ static void simulate(SDL_Renderer* renderer, Options const& opts)
     bool do_print_stats = opts.print_stats;
     bool do_run = true;
     for (;;) {
+        bool do_redraw = do_run;
         Uint32 ticks = SDL_GetTicks();
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -28,14 +29,11 @@ static void simulate(SDL_Renderer* renderer, Options const& opts)
                 switch (event.key.keysym.sym) {
                 case SDLK_a:
                     do_draw_aff = !do_draw_aff;
+                    do_redraw = true;
                     break;
                 case SDLK_d:
                     do_draw = !do_draw;
-                    if (opts.draw && !do_draw) {
-                        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-                        SDL_RenderClear(renderer);
-                        SDL_RenderPresent(renderer);
-                    }
+                    do_redraw = true;
                     break;
                 case SDLK_q:
                     return;
@@ -48,20 +46,26 @@ static void simulate(SDL_Renderer* renderer, Options const& opts)
                 }
             }
         }
+        if (opts.draw && do_redraw) {
+            if (do_draw) {
+                world.draw_smells(renderer);
+                if (do_draw_aff) {
+                    world.draw_affs(renderer);
+                }
+                world.draw_animals(renderer);
+            } else {
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                SDL_RenderClear(renderer);
+            }
+            SDL_RenderPresent(renderer);
+            do_redraw = false;
+        }
         if (do_run) {
             if (do_print_stats) {
                 world.get_statistics(stats);
                 stats.print(stdout);
                 putchar('\n');
                 fflush(stdout);
-            }
-            if (opts.draw && do_draw) {
-                world.draw_smells(renderer);
-                if (do_draw_aff) {
-                    world.draw_affs(renderer);
-                }
-                world.draw_animals(renderer);
-                SDL_RenderPresent(renderer);
             }
             world.simulate();
         }
