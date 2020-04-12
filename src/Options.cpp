@@ -29,9 +29,9 @@ static long get_num_arg(char* argv[], int& i, long lower, unsigned long upper)
             argv[0], arg_string, argv[i - 1]);
         exit(EXIT_FAILURE);
     }
-    if (arg_long < (long)lower || arg_long > (long)upper) {
+    if (arg_long < lower || (unsigned long)arg_long > upper) {
         fprintf(stderr,
-            "%s: Numeric argument %s to option %s out of range %ld to %ld\n",
+            "%s: Numeric argument %s to option %s out of range %ld to %lu\n",
             argv[0], arg_string, argv[i - 1], lower, upper);
         exit(EXIT_FAILURE);
     }
