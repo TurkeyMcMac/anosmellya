@@ -33,6 +33,8 @@ smell, and white is velocity.
 * Press Q to quit.
 * Press R to pause/unpause the simulation.
 * Press S to toggle statistic printing.
+* Press W to toggle waiting.
+If it is off, then the simulation will run as fast as the computer can process.
 
 ### Configuration
 

@@ -19,6 +19,7 @@ static void simulate(SDL_Renderer* renderer, Options const& opts)
     bool do_draw = opts.draw;
     bool do_print_stats = opts.print_stats;
     bool do_run = true;
+    bool do_wait = true;
     for (;;) {
         bool do_redraw = do_run;
         Uint32 ticks = SDL_GetTicks();
@@ -42,6 +43,9 @@ static void simulate(SDL_Renderer* renderer, Options const& opts)
                     break;
                 case SDLK_s:
                     do_print_stats = !do_print_stats;
+                    break;
+                case SDLK_w:
+                    do_wait = !do_wait;
                     break;
                 }
             }
@@ -69,9 +73,11 @@ static void simulate(SDL_Renderer* renderer, Options const& opts)
             }
             world.simulate();
         }
-        Uint32 new_ticks = SDL_GetTicks();
-        if (new_ticks - ticks < opts.frame_delay) {
-            SDL_Delay(opts.frame_delay - (new_ticks - ticks));
+        if (do_wait || !do_run) {
+            Uint32 new_ticks = SDL_GetTicks();
+            if (new_ticks - ticks < opts.frame_delay) {
+                SDL_Delay(opts.frame_delay - (new_ticks - ticks));
+            }
         }
     }
 }
