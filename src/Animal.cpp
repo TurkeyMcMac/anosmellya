@@ -1,5 +1,5 @@
 #include "Animal.hpp"
-#include <cmath>
+#include <math.h>
 
 using namespace anosmellya;
 
