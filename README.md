@@ -52,10 +52,8 @@ The `-print-stats` option enables statistics to be printed.
 Each tick, a JSON object is printed on a new line of standard output.
 The fields are as follows:
 
-* `world_width`:
-The width of the world in tiles.
-* `world_height`:
-The height of the world in tiles.
+* `world_width`, `world_height`:
+The width and height of the world in tiles.
 * `herb_avg`:
 The average stats of an herbivore.
 * `herb_count`:
@@ -64,14 +62,8 @@ The herbivore population.
 The average stats of a carnivore.
 * `carn_count`:
 The carnivore population.
-* `plant_total`:
-The total plant amount across all tiles.
-* `carn_total`:
-The total carnivore smell across all tiles.
-* `herb_total`:
-The total herbivore smell across all tiles.
-* `baby_total`:
-The total baby smell across all tiles.
+* `plant_total`, `carn_total`, `herb_total`, `baby_total`:
+The total of each smell across all tiles.
 
 The `herb_avg` and `carn_avg` objects have the following keys:
 
