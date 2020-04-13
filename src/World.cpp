@@ -394,6 +394,8 @@ void World::draw_animals(SDL_Renderer* renderer)
 
 void World::get_statistics(Statistics& stats)
 {
+    stats.world_width = get_width();
+    stats.world_height = get_height();
     stats.herb_avg = Animal();
     stats.herb_count = 0;
     stats.carn_avg = Animal();
@@ -430,7 +432,9 @@ void World::get_statistics(Statistics& stats)
 
 void Statistics::print(FILE* to)
 {
-    fputs("{\"herb_avg\":", to);
+    fprintf(to, "{\"world_width\":%u,\"world_height\":%u", world_width,
+        world_height);
+    fputs(",\"herb_avg\":", to);
     herb_avg.print(to);
     fprintf(to, ",\"herb_count\":%u", herb_count);
     fputs(",\"carn_avg\":", to);

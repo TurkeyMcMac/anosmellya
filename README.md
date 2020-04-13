@@ -52,6 +52,10 @@ The `-print-stats` option enables statistics to be printed.
 Each tick, a JSON object is printed on a new line of standard output.
 The fields are as follows:
 
+* `world_width`:
+The width of the world in tiles.
+* `world_height`:
+The height of the world in tiles.
 * `herb_avg`:
 The average stats of an herbivore.
 * `herb_count`:

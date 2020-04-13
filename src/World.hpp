@@ -11,6 +11,8 @@
 namespace anosmellya {
 
 struct Statistics {
+    unsigned world_width;
+    unsigned world_height;
     Animal herb_avg;
     unsigned herb_count;
     Animal carn_avg;
