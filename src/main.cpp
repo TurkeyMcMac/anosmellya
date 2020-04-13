@@ -22,6 +22,7 @@ static void simulate(SDL_Renderer* renderer, Options const& opts)
     bool do_wait = true;
     for (;;) {
         bool do_redraw = do_run;
+        bool do_one_tick = false;
         Uint32 ticks = SDL_GetTicks();
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -34,6 +35,10 @@ static void simulate(SDL_Renderer* renderer, Options const& opts)
                     break;
                 case SDLK_d:
                     do_draw = !do_draw;
+                    do_redraw = true;
+                    break;
+                case SDLK_f:
+                    do_one_tick = true;
                     do_redraw = true;
                     break;
                 case SDLK_q:
@@ -50,6 +55,15 @@ static void simulate(SDL_Renderer* renderer, Options const& opts)
                 }
             }
         }
+        if (do_run || do_one_tick) {
+            if (do_print_stats) {
+                world.get_statistics(stats);
+                stats.print(stdout);
+                putchar('\n');
+                fflush(stdout);
+            }
+            world.simulate();
+        }
         if (opts.draw && do_redraw) {
             if (do_draw) {
                 world.draw_smells(renderer);
@@ -62,16 +76,6 @@ static void simulate(SDL_Renderer* renderer, Options const& opts)
                 SDL_RenderClear(renderer);
             }
             SDL_RenderPresent(renderer);
-            do_redraw = false;
-        }
-        if (do_run) {
-            if (do_print_stats) {
-                world.get_statistics(stats);
-                stats.print(stdout);
-                putchar('\n');
-                fflush(stdout);
-            }
-            world.simulate();
         }
         if (do_wait || !do_run) {
             Uint32 new_ticks = SDL_GetTicks();

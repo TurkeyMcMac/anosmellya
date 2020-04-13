@@ -30,6 +30,7 @@ A color coded vector is shown around an object scaled relative to the others.
 Green is plant, blue is herbivore smell, red is carnivore smell, pink is baby
 smell, and white is velocity.
 * Press D to toggle drawing, provided it was enabled in the first place.
+* Press F to go forward one simulation tick while paused.
 * Press Q to quit.
 * Press R to pause/unpause the simulation.
 * Press S to toggle statistic printing.
