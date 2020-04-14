@@ -171,7 +171,6 @@ static void tick_animal(Random& random, Config const& conf, unsigned x,
         return;
     }
     Vec2D pos_orig = an.pos;
-    Vec2D vel_orig = an.vel;
     Vec2D acc(0., 0.);
     float plant_here = plant.at(x, y);
     float carn_here = carn.at(x, y);
@@ -230,7 +229,9 @@ static void tick_animal(Random& random, Config const& conf, unsigned x,
                 }
             }
             an.pos = pos_orig;
-            an.vel = vel_orig;
+            an.vel = Vec2D(
+                (an.vel.x + target.vel.x) / 2., (an.vel.y + target.vel.y) / 2.);
+            target.vel = an.vel;
         } else {
             target = an;
             target.just_moved = ty > y || tx > x;
