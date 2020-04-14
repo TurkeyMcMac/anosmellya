@@ -1,9 +1,12 @@
-flags = -O3 -flto -Wall -Wextra -std=c++11 -DVERSION=\"`cat version`\"
+target = anosmellya
+flags = `sdl2-config --cflags` -O3 -flto -Wall -Wextra -std=c++11 \
+	-DVERSION=\"`cat version`\" $(CXXFLAGS)
+libs = `sdl2-config --libs`
 
 CXX ?= c++
 
-anosmellya: src/* version
-	$(CXX) $(flags) -o $@ src/*.cpp -lSDL2
+$(target): src/* version
+	$(CXX) $(flags) -o $@ src/*.cpp $(libs)
 
 .PHONY: fmt
 fmt:
@@ -11,4 +14,4 @@ fmt:
 
 .PHONY: clean
 clean:
-	rm -f anosmellya
+	rm -f $(target)
