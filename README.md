@@ -9,9 +9,23 @@ The idea and parts of the code are borrowed from my project Intergrid.
 
 ## Compilation
 
-Run `make` on a Unix system.
-The program can probably built on Windows somehow, since it just requires C++11
-and SDL2.
+### For Unix
+
+Run `make`.
+
+### For Windows (with MinGW)
+
+Run this:
+
+```
+CXX="$ARCH-g++" PATH="$SDL/$ARCH/bin:$PATH" CXXFLAGS="-I$SDL/$ARCH/include -L$SDL/$ARCH/lib -static" make target=anosmellya.exe libs='`sdl2-config --static-libs`'
+```
+
+Where the variable `SDL` is set to the path of the directory you unzipped from
+[here](http://libsdl.org/release/SDL2-devel-2.0.12-mingw.tar.gz) and `ARCH` is
+either `x86_64-w64-mingw32` or `i686-w64-mingw32`.
+
+A large (statically linked) executable `anosmellya.exe` will be produced.
 
 ## Usage
 
