@@ -14,6 +14,8 @@ public:
     {
     }
 
+    Grid& operator=(Grid const& copy) = default;
+
     Grid(unsigned width, unsigned height)
         : width(width)
         , height(height)

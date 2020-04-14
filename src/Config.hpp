@@ -8,6 +8,8 @@ public:
     // Initializes the default values. See the file "conf" for said defaults.
     Config();
 
+    Config& operator=(Config const& copy) = default;
+
     int parse(const char* path);
 
     int parse_cstr(const char* cstr);

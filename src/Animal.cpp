@@ -13,16 +13,6 @@ SmellAffinity::SmellAffinity()
 {
 }
 
-SmellAffinity::SmellAffinity(SmellAffinity const& copy)
-    : impulse(copy.impulse)
-    , plant_effect(copy.plant_effect)
-    , herb_effect(copy.herb_effect)
-    , carn_effect(copy.carn_effect)
-    , baby_effect(copy.baby_effect)
-    , food_effect(copy.food_effect)
-{
-}
-
 Animal::Animal()
     : pos(0., 0.)
     , vel(0., 0.)

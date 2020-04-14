@@ -18,10 +18,7 @@ struct Vec2D {
     {
     }
 
-    Vec2D(Vec2D const& copy)
-        : Vec2D(copy.x, copy.y)
-    {
-    }
+    Vec2D& operator=(Vec2D const& copy) = default;
 };
 
 } /* namespace anosmellya */

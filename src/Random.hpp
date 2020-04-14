@@ -12,6 +12,8 @@ public:
     {
     }
 
+    Random& operator=(Random const& copy) = default;
+
     uint32_t generate()
     {
         static const uint32_t rand_table[16]

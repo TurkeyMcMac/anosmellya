@@ -18,13 +18,14 @@ struct SmellAffinity {
     // Construct a smell affinity with all zeroes.
     SmellAffinity();
 
-    // Copy a smell affinity.
-    SmellAffinity(SmellAffinity const& copy);
+    SmellAffinity& operator=(SmellAffinity const& copy) = default;
 };
 
 struct Animal {
     // Construct an animal with all zeroes.
     Animal();
+
+    Animal& operator=(Animal const& copy) = default;
 
     // Construct an animal with a random mix of traits from the mother and
     // father. The new animal has the position and velocity of the mother. Its

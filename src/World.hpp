@@ -22,6 +22,8 @@ struct Statistics {
     float carn_total;
     float baby_total;
 
+    Statistics& operator=(Statistics const& copy) = default;
+
     // Print the information as JSON to the file.
     void print(FILE* to);
 };
@@ -30,6 +32,8 @@ class World {
 public:
     World(unsigned width, unsigned height, Random const& random,
         Config const& conf);
+
+    World& operator=(World const& copy) = default;
 
     unsigned get_width();
 

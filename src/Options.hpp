@@ -17,6 +17,8 @@ struct Options {
     int pixel_size;
 
     Options(int argc, char* argv[]);
+
+    Options& operator=(Options const& copy) = default;
 };
 
 } /* namespace anosmellya */
