@@ -383,10 +383,11 @@ void World::draw_animals(SDL_Renderer* renderer)
             Animal const& an = animal.at(x, y);
             if (an.is_present) {
                 uint8_t red = an.is_carn ? 255 : 0;
+                uint8_t green = is_receptive(an) ? 127 : 0;
                 uint8_t blue = an.is_carn ? 0 : 255;
                 tile.x = (an.pos.x - 0.5) * tile.w;
                 tile.y = (an.pos.y - 0.5) * tile.h;
-                SDL_SetRenderDrawColor(renderer, red, 0, blue, 255);
+                SDL_SetRenderDrawColor(renderer, red, green, blue, 255);
                 SDL_RenderFillRect(renderer, &tile);
             }
         }
