@@ -111,8 +111,7 @@ static int parse_istream(Config& conf, std::istream& file, const char* name)
         size_t key_start = i;
         size_t key_end;
         for (key_end = i; key_end < line.length() && is_key_char(line[key_end]);
-             ++key_end) {
-        }
+             ++key_end) { }
         i = skip_space(line, key_end);
         if (i >= line.length() || line[i] != '=') {
             fprintf(
