@@ -206,7 +206,7 @@ static void tick_animal(Random& random, Config const& conf, unsigned x,
         carn.at(tx, ty) += conf.carn_amount;
     } else {
         float eat = plant.at(tx, ty) * conf.herb_eat_portion;
-        an.food += eat;
+        an.food += eat * conf.herb_efficiency;
         plant.at(tx, ty) -= eat;
         herb.at(tx, ty) += conf.herb_amount;
     }
@@ -215,11 +215,11 @@ static void tick_animal(Random& random, Config const& conf, unsigned x,
         if (target.is_present) {
             if (an.is_carn && !target.is_carn) {
                 float eat = target.food * conf.carn_eat_portion;
-                an.food += eat;
+                an.food += eat * conf.carn_efficiency;
                 target.food -= eat;
             } else if (!an.is_carn && target.is_carn) {
                 float eat = an.food * conf.carn_eat_portion;
-                target.food += eat;
+                target.food += eat * conf.carn_efficiency;
                 an.food -= eat;
             } else {
                 if (is_receptive(target)) {

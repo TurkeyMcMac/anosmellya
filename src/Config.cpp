@@ -15,11 +15,13 @@ Config::Config()
     , carn_amount(1.)
     , carn_dispersal(0.4)
     , carn_eat_portion(0.5)
+    , carn_efficiency(0.8)
     , carn_evap(0.0005)
     , friction(0.03)
     , herb_amount(1.)
     , herb_dispersal(0.4)
     , herb_eat_portion(0.5)
+    , herb_efficiency(0.8)
     , herb_evap(0.0005)
     , initial_animal_chance(0.1)
     , initial_carn_chance(0.1)
@@ -62,6 +64,8 @@ static bool set_option(Config& conf, std::string& key, float val)
         conf.carn_dispersal = val;
     } else if (key == "carn_eat_portion") {
         conf.carn_eat_portion = val;
+    } else if (key == "carn_efficiency") {
+        conf.carn_efficiency = val;
     } else if (key == "carn_evap") {
         conf.carn_evap = val;
     } else if (key == "friction") {
@@ -72,6 +76,8 @@ static bool set_option(Config& conf, std::string& key, float val)
         conf.herb_dispersal = val;
     } else if (key == "herb_eat_portion") {
         conf.herb_eat_portion = val;
+    } else if (key == "herb_efficiency") {
+        conf.herb_efficiency = val;
     } else if (key == "herb_evap") {
         conf.herb_evap = val;
     } else if (key == "initial_variation") {

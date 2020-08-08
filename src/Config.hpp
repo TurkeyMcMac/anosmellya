@@ -20,11 +20,13 @@ public:
     float carn_amount;
     float carn_dispersal;
     float carn_eat_portion;
+    float carn_efficiency;
     float carn_evap;
     float friction;
     float herb_amount;
     float herb_dispersal;
     float herb_eat_portion;
+    float herb_efficiency;
     float herb_evap;
     float initial_animal_chance;
     float initial_carn_chance;
