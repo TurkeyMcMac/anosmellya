@@ -32,7 +32,7 @@ Animal::Animal()
 {
 }
 
-static float pick(Random& random, float a, float b)
+template <typename T> static T pick(Random& random, T a, T b)
 {
     return random.generate() % 2 == 0 ? a : b;
 }
@@ -41,8 +41,7 @@ static SmellAffinity pick_aff(
     Random& random, SmellAffinity const& a, SmellAffinity const& b)
 {
     SmellAffinity aff;
-    aff.impulse.x = pick(random, a.impulse.x, b.impulse.x);
-    aff.impulse.y = pick(random, a.impulse.y, b.impulse.y);
+    aff.impulse = pick(random, a.impulse, b.impulse);
     aff.plant_effect = pick(random, a.plant_effect, b.plant_effect);
     aff.herb_effect = pick(random, a.herb_effect, b.herb_effect);
     aff.carn_effect = pick(random, a.carn_effect, b.carn_effect);
