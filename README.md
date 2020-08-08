@@ -55,7 +55,7 @@ If it is off, then the simulation will run as fast as the computer can process.
 
 Configuration is given in a simple `KEY = VALUE` format.
 You can see the full list of configurable parameters, with explanations, in the
-file `conf`.
+file `configurations/default.conf`.
 Use the option `-conf FILE` to pass another configuration file.
 Use the option `-cs STRING` to pass configuration as a string.
 The format is the same as for a configuration file.
