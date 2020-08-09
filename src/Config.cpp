@@ -31,8 +31,8 @@ Config::Config()
     , mutate_chance(0.05)
     , plant_dispersal(0.07)
     , plant_evap(0.001)
-    , plant_place_amount(800.)
-    , plant_place_chance(0.000063492)
+    , plant_place_amount(1000.)
+    , plant_place_chance(0.00007)
 {
 }
 
