@@ -57,9 +57,12 @@ Configuration is given in a simple `KEY = VALUE` format.
 You can see the full list of configurable parameters, with explanations, in the
 file `configurations/default.conf`.
 Other interesting configurations are put in the same directory.
-If a configuration lists working seeds, those seeds are guaranteed to produce
-the same result on your computer only if it does single-precision floating-point
-arithmetic the same as the computer on which each seed was tested.
+If a configuration lists working seeds, those seeds might not work on your
+computer.
+I think this is due to a difference in single precision floating point
+arithmetic, but it might be caused by other things to.
+In any case, a fixed seed combined with other fixed options is deterministic on
+any given computer.
 Use the option `-conf FILE` to pass another configuration file.
 Use the option `-cs STRING` to pass configuration as a string.
 The format is the same as for a configuration file.
