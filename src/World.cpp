@@ -260,8 +260,8 @@ void World::simulate()
         }
     }
     for (unsigned i = 0;
-         i < get_width() * get_height() * conf.plant_place_chance
-             + random.generate(1.);
+         i < (unsigned)(get_width() * get_height() * conf.plant_place_chance
+             + random.generate(1.));
          ++i) {
         plant.at(
             random.generate() % get_width(), random.generate() % get_height())
