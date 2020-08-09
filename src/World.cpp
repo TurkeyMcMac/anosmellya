@@ -12,6 +12,10 @@ World::World(
     , herb(width, height, 0.)
     , carn(width, height, 0.)
     , baby(width, height, 0.)
+    , carn_rect_buf()
+    , herb_rect_buf()
+    , receptive_carn_rect_buf()
+    , receptive_herb_rect_buf()
 {
     for (unsigned y = 0; y < height; ++y) {
         for (unsigned x = 0; x < width; ++x) {
@@ -382,16 +386,36 @@ void World::draw_animals(SDL_Renderer* renderer)
         for (unsigned x = 0; x < get_width(); ++x) {
             Animal const& an = animal.at(x, y);
             if (an.is_present) {
-                uint8_t red = an.is_carn ? 255 : 0;
-                uint8_t green = is_receptive(an) ? 127 : 0;
-                uint8_t blue = an.is_carn ? 0 : 255;
                 tile.x = (an.pos.x - 0.5) * tile.w;
                 tile.y = (an.pos.y - 0.5) * tile.h;
-                SDL_SetRenderDrawColor(renderer, red, green, blue, 255);
-                SDL_RenderFillRect(renderer, &tile);
+                if (an.is_carn) {
+                    if (is_receptive(an)) {
+                        receptive_carn_rect_buf.push_back(tile);
+                    } else {
+                        carn_rect_buf.push_back(tile);
+                    }
+                } else if (is_receptive(an)) {
+                    receptive_herb_rect_buf.push_back(tile);
+                } else {
+                    herb_rect_buf.push_back(tile);
+                }
             }
         }
     }
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+    SDL_RenderFillRects(renderer, herb_rect_buf.data(), herb_rect_buf.size());
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_RenderFillRects(renderer, carn_rect_buf.data(), carn_rect_buf.size());
+    SDL_SetRenderDrawColor(renderer, 0, 127, 255, 255);
+    SDL_RenderFillRects(renderer, receptive_herb_rect_buf.data(),
+        receptive_herb_rect_buf.size());
+    SDL_SetRenderDrawColor(renderer, 255, 127, 0, 255);
+    SDL_RenderFillRects(renderer, receptive_carn_rect_buf.data(),
+        receptive_carn_rect_buf.size());
+    carn_rect_buf.clear();
+    herb_rect_buf.clear();
+    receptive_carn_rect_buf.clear();
+    receptive_herb_rect_buf.clear();
 }
 
 void World::get_statistics(Statistics& stats)

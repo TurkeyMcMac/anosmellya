@@ -7,6 +7,7 @@
 #include "Random.hpp"
 #include <SDL2/SDL.h>
 #include <stdio.h>
+#include <vector>
 
 namespace anosmellya {
 
@@ -59,6 +60,10 @@ private:
     Grid<float> herb;
     Grid<float> carn;
     Grid<float> baby;
+    std::vector<SDL_Rect> carn_rect_buf;
+    std::vector<SDL_Rect> herb_rect_buf;
+    std::vector<SDL_Rect> receptive_carn_rect_buf;
+    std::vector<SDL_Rect> receptive_herb_rect_buf;
 };
 
 } /* namespace anosmellya */
