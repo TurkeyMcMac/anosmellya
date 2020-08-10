@@ -160,6 +160,8 @@ static void tick_animal(Random& random, Config const& conf, unsigned x,
     unsigned y, Grid<Animal>& animal, Grid<float>& plant, Grid<float>& carn,
     Grid<float>& herb, Grid<float>& baby)
 {
+    unsigned width = animal.get_width();
+    unsigned height = animal.get_height();
     Animal& an = animal.at(x, y);
     if (!an.is_present) {
         return;
@@ -199,10 +201,11 @@ static void tick_animal(Random& random, Config const& conf, unsigned x,
     an.vel.y *= 1. - conf.friction;
     an.pos.x += an.vel.x;
     an.pos.y += an.vel.y;
-    wrap(an.pos.x, animal.get_width());
-    wrap(an.pos.y, animal.get_height());
-    unsigned tx = an.pos.x;
-    unsigned ty = an.pos.y;
+    wrap(an.pos.x, width);
+    wrap(an.pos.y, height);
+    // Prevent weird issues I have encountered, and handle NaN/Infinity:
+    unsigned tx = an.pos.x < width ? an.pos.x : width - 1;
+    unsigned ty = an.pos.y < height ? an.pos.y : height - 1;
     if (is_receptive(an)) {
         baby.at(tx, ty) += an.baby_smell_amount;
     }
