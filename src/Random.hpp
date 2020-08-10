@@ -16,9 +16,8 @@ public:
 
     uint32_t generate()
     {
-        static const uint32_t rand_table[16]
-            = { 17, 11, 4, 15, 14, 2, 7, 1, 13, 11, 13, 14, 12, 15, 19, 5 };
-        state = rotright(state, (state | 1) & 31) + rand_table[state % 16];
+        // https://en.wikipedia.org/wiki/Linear_congruential_generator (maybe?)
+        state = 1103515245 * state + 12345;
         return state;
     }
 
@@ -31,11 +30,6 @@ public:
 
 private:
     uint32_t state;
-
-    static uint32_t rotright(uint32_t bits, uint32_t amount)
-    {
-        return bits >> amount | bits << (32 - amount);
-    }
 };
 
 #endif /* ANOSMELLYA_RANDOM_H_ */
