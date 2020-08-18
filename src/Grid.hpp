@@ -36,7 +36,13 @@ public:
         }
     }
 
-    ~Grid() { free(tiles); }
+    ~Grid()
+    {
+        for (unsigned i = 0; i < width * height; ++i) {
+            tiles[i].~T();
+        }
+        free(tiles);
+    }
 
     T& at(unsigned x, unsigned y) { return tiles[y * width + x]; }
 
