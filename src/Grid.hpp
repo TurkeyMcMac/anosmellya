@@ -1,6 +1,7 @@
 #ifndef ANOSMELLYA_GRID_H_
 #define ANOSMELLYA_GRID_H_
 
+#include <stdio.h>
 #include <stdlib.h>
 
 namespace anosmellya {
@@ -21,6 +22,7 @@ public:
         , height(height)
         , tiles((T*)calloc(width * sizeof(T), height))
     {
+        check_oom();
     }
 
     Grid(unsigned width, unsigned height, T fill)
@@ -28,6 +30,7 @@ public:
         , height(height)
         , tiles((T*)malloc(width * height * sizeof(T)))
     {
+        check_oom();
         for (unsigned i = 0; i < width * height; ++i) {
             tiles[i] = fill;
         }
@@ -108,6 +111,14 @@ private:
     unsigned width;
     unsigned height;
     T* tiles;
+
+    void check_oom()
+    {
+        if (!tiles) {
+            fputs("Out of memory.\n", stderr);
+            abort();
+        }
+    }
 };
 
 } /* namespace anosmellya */
