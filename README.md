@@ -38,17 +38,18 @@ You can get a full list of options by running `./anosmellya -help`.
 
 The keyboard supplies some control at runtime.
 
-* Press A to toggle visual smell affinity vectors, provided drawing was enabled.
+* Press **A** to toggle visual smell affinity vectors, provided drawing was
+enabled.
 This may slow things down.
 A color coded vector is shown around an object scaled relative to the others.
 Green is plant, blue is herbivore smell, red is carnivore smell, pink is baby
 smell, and white is velocity.
-* Press D to toggle drawing, provided it was enabled in the first place.
-* Press F to go forward one simulation tick while paused.
-* Press Q to quit.
-* Press R to pause/unpause the simulation.
-* Press S to toggle statistic printing.
-* Press W to toggle waiting.
+* Press **D** to toggle drawing, provided it was enabled in the first place.
+* Press **F** to go forward one simulation tick while paused.
+* Press **Q** to quit.
+* Press **R** to pause/unpause the simulation.
+* Press **S** to toggle statistic printing.
+* Press **W** to toggle waiting.
 If it is off, then the simulation will run as fast as the computer can process.
 
 ### Configuration
