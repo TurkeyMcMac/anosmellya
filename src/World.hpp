@@ -34,8 +34,6 @@ public:
     World(unsigned width, unsigned height, Random const& random,
         Config const& conf);
 
-    World& operator=(World const& copy) = default;
-
     unsigned get_width();
 
     unsigned get_height();
