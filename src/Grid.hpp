@@ -1,7 +1,7 @@
 #ifndef ANOSMELLYA_GRID_H_
 #define ANOSMELLYA_GRID_H_
 
-#include <stdio.h>
+#include <new>
 #include <stdlib.h>
 
 namespace anosmellya {
@@ -121,8 +121,7 @@ private:
     void check_oom()
     {
         if (!tiles) {
-            fputs("Out of memory.\n", stderr);
-            abort();
+            throw new std::bad_alloc();
         }
     }
 };
