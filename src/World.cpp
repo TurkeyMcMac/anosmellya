@@ -1,10 +1,18 @@
 #include "World.hpp"
+#include <limits.h>
 #include <math.h>
 
 using namespace anosmellya;
 
-World::World(
-    unsigned width, unsigned height, Random const& random, Config const& conf)
+// NOTE: I put empty while loops around fallible SDL calls because I don't want
+// a crash, but those failures seem unlikely. If I see a hang, I will reconsider
+// this decision. Thread creation failure is also ignored (the program just runs
+// a bit slower.)
+
+static int worker_proc(void* arg);
+
+World::World(unsigned width, unsigned height, Random const& random,
+    Config const& conf, unsigned max_threads)
     : random(random)
     , conf(conf)
     , animal(width, height)
@@ -16,7 +24,33 @@ World::World(
     , herb_rect_buf()
     , receptive_carn_rect_buf()
     , receptive_herb_rect_buf()
+    , workers()
 {
+    if (max_threads == 0) {
+        int cpu_count = SDL_GetCPUCount();
+        max_threads = cpu_count > 0 ? (unsigned)cpu_count : UINT_MAX;
+    }
+    // Make up to max_threads - 1 workers and mark unused workers as such:
+    for (unsigned i = 0; i < sizeof(workers) / sizeof(*workers); ++i) {
+        // If creation fails, this worker won't be used:
+        workers[i].thread = NULL;
+        if (max_threads > 1) {
+            workers[i].start_sem = SDL_CreateSemaphore(0);
+            if (workers[i].start_sem) {
+                workers[i].stop_sem = SDL_CreateSemaphore(0);
+                if (workers[i].stop_sem) {
+                    workers[i].thread = SDL_CreateThread(
+                        worker_proc, "Anosmellya fluid worker", &workers[i]);
+                    if (workers[i].thread) {
+                        --max_threads;
+                        continue;
+                    }
+                    SDL_DestroySemaphore(workers[i].stop_sem);
+                }
+                SDL_DestroySemaphore(workers[i].start_sem);
+            }
+        }
+    }
     for (unsigned y = 0; y < height; ++y) {
         for (unsigned x = 0; x < width; ++x) {
             Animal an;
@@ -30,6 +64,19 @@ World::World(
                 an.mutate(this->random, conf.initial_variation);
             }
             animal.at(x, y) = an;
+        }
+    }
+}
+
+World::~World()
+{
+    for (unsigned i = 0; i < sizeof(workers) / sizeof(*workers); ++i) {
+        if (workers[i].thread) {
+            workers[i].grid = NULL;
+            while (SDL_SemPost(workers[i].start_sem)) { }
+            SDL_WaitThread(workers[i].thread, NULL);
+            SDL_DestroySemaphore(workers[i].start_sem);
+            SDL_DestroySemaphore(workers[i].stop_sem);
         }
     }
 }
@@ -247,21 +294,78 @@ static void tick_animal(Random& random, Config const& conf, unsigned x,
     }
 }
 
+static int worker_proc(void* arg)
+{
+    FluidWorker* worker = (FluidWorker*)arg;
+    for (;;) {
+        while (SDL_SemWait(worker->start_sem)) { }
+        if (!worker->grid) {
+            break;
+        }
+        disperse(*worker->grid, worker->dispersal);
+        evaporate(*worker->grid, worker->evap);
+        while (SDL_SemPost(worker->stop_sem)) { }
+    }
+    return 0;
+}
+
 void World::simulate()
 {
-    disperse(plant, conf.plant_dispersal);
-    evaporate(plant, conf.plant_evap);
-    disperse(herb, conf.herb_dispersal);
-    evaporate(herb, conf.herb_evap);
-    disperse(carn, conf.carn_dispersal);
-    evaporate(carn, conf.carn_evap);
+    FluidWorker& plant_worker = workers[0];
+    FluidWorker& herb_worker = workers[1];
+    FluidWorker& carn_worker = workers[2];
+    // Set available workers working:
+    if (plant_worker.thread) {
+        plant_worker.grid = &plant;
+        plant_worker.evap = conf.plant_evap;
+        plant_worker.dispersal = conf.plant_dispersal;
+        while (SDL_SemPost(plant_worker.start_sem)) { }
+    }
+    if (herb_worker.thread) {
+        herb_worker.grid = &herb;
+        herb_worker.evap = conf.herb_evap;
+        herb_worker.dispersal = conf.herb_dispersal;
+        while (SDL_SemPost(herb_worker.start_sem)) { }
+    }
+    if (carn_worker.thread) {
+        carn_worker.grid = &carn;
+        carn_worker.evap = conf.carn_evap;
+        carn_worker.dispersal = conf.carn_dispersal;
+        while (SDL_SemPost(carn_worker.start_sem)) { }
+    }
+    // If workers don't exist to do the work, do it on the main thread:
+    if (!plant_worker.thread) {
+        disperse(plant, conf.plant_dispersal);
+        evaporate(plant, conf.plant_evap);
+    }
+    if (!herb_worker.thread) {
+        disperse(herb, conf.herb_dispersal);
+        evaporate(herb, conf.herb_evap);
+    }
+    if (!carn_worker.thread) {
+        disperse(carn, conf.carn_dispersal);
+        evaporate(carn, conf.carn_evap);
+    }
+    // The main thread is always utilized to do baby fluid simulation:
     disperse(baby, conf.baby_dispersal);
     evaporate(baby, conf.baby_evap);
+    // Wait for other calculations to finish:
+    if (plant_worker.thread) {
+        while (SDL_SemWait(plant_worker.stop_sem)) { }
+    }
+    if (herb_worker.thread) {
+        while (SDL_SemWait(herb_worker.stop_sem)) { }
+    }
+    if (carn_worker.thread) {
+        while (SDL_SemWait(carn_worker.stop_sem)) { }
+    }
+    // Now the animals:
     for (unsigned y = 0; y < get_height(); ++y) {
         for (unsigned x = 0; x < get_width(); ++x) {
             tick_animal(random, conf, x, y, animal, plant, carn, herb, baby);
         }
     }
+    // And place some plant matter:
     for (unsigned i = 0;
          i < (unsigned)(get_width() * get_height() * conf.plant_place_chance
              + random.generate(1.));

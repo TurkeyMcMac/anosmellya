@@ -61,6 +61,8 @@ Options:\n\
  -no-print-stats         Do not print statistics. This is the default.\n\
  -frame-delay <delay>    Delay for <delay> milliseconds per frame.\n\
  -pixel-size <size>      Set the simulation pixel size in screen pixels.\n\
+ -max-threads <threads>  The maximum number of threads used for computation.\n\
+                         The default is the number of computer cores.\n\
  -help                   Print this help information.\n\
  -version                Print version information.");
 }
@@ -79,6 +81,7 @@ Options::Options(int argc, char* argv[])
     , print_stats(false)
     , frame_delay(60)
     , pixel_size(3)
+    , max_threads(0)
 {
     char* progname = argv[0];
     for (int i = 1; i < argc; ++i) {
@@ -119,6 +122,8 @@ Options::Options(int argc, char* argv[])
             frame_delay = (unsigned)get_num_arg(argv, i, 0, 2000000000);
         } else if (!strcmp(opt, "-pixel-size")) {
             pixel_size = get_num_arg(argv, i, 1, 1000000);
+        } else if (!strcmp(opt, "-max-threads")) {
+            max_threads = (unsigned)get_num_arg(argv, i, 1, 100000);
         } else if (!strcmp(opt, "-help") || !strcmp(opt, "-h")) {
             print_help(progname);
             exit(EXIT_SUCCESS);

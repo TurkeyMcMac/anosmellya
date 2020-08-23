@@ -13,7 +13,8 @@ static void simulate(SDL_Renderer* renderer, Options const& opts)
 {
     SDL_Event event;
     Random random(opts.seed);
-    World world(opts.world_width, opts.world_height, random, opts.conf);
+    World world(opts.world_width, opts.world_height, random, opts.conf,
+        opts.max_threads);
     Statistics stats;
     bool do_draw_aff = false;
     bool do_draw = opts.draw;

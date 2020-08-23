@@ -15,6 +15,7 @@ struct Options {
     bool print_stats;
     unsigned frame_delay;
     int pixel_size;
+    unsigned max_threads;
 
     Options(int argc, char* argv[]);
 
