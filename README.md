@@ -60,10 +60,9 @@ file `configurations/default.conf`.
 Other interesting configurations are put in the same directory.
 If a configuration lists working seeds, those seeds might not work on your
 computer.
-I think this is due to a difference in single precision floating point
-arithmetic, but it might be caused by other things to.
-In any case, a fixed seed combined with other fixed options is deterministic on
-any given computer.
+A fixed seed is only sure to produce fixed output with fixed CLI options using a
+fixed executable on a fixed computer.
+However, the initial genes generated might be similar given just a fixed seed.
 Use the option `-conf FILE` to pass another configuration file.
 Use the option `-cs STRING` to pass configuration as a string.
 The format is the same as for a configuration file.
