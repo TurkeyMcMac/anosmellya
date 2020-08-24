@@ -119,11 +119,11 @@ Options::Options(int argc, char* argv[])
         } else if (!strcmp(opt, "-no-print-stats")) {
             print_stats = false;
         } else if (!strcmp(opt, "-frame-delay")) {
-            frame_delay = (unsigned)get_num_arg(argv, i, 0, 2000000000);
+            frame_delay = (unsigned)get_num_arg(argv, i, 0, 60000);
         } else if (!strcmp(opt, "-pixel-size")) {
             pixel_size = get_num_arg(argv, i, 1, 1000000);
         } else if (!strcmp(opt, "-max-threads")) {
-            max_threads = (unsigned)get_num_arg(argv, i, 1, 100000);
+            max_threads = (unsigned)get_num_arg(argv, i, 1, 10000);
         } else if (!strcmp(opt, "-help") || !strcmp(opt, "-h")) {
             print_help(progname);
             exit(EXIT_SUCCESS);
