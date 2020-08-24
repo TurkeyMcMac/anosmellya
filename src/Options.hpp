@@ -15,7 +15,7 @@ struct Options {
     bool print_stats;
     unsigned frame_delay;
     int pixel_size;
-    unsigned max_threads;
+    unsigned max_threads; // 0 means use the number of CPUs
 
     Options(int argc, char* argv[]);
 
