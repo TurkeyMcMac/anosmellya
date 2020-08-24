@@ -14,6 +14,7 @@ namespace anosmellya {
 struct Statistics {
     unsigned world_width;
     unsigned world_height;
+    unsigned long long tick;
     Animal herb_avg;
     unsigned herb_count;
     Animal carn_avg;
@@ -56,6 +57,8 @@ public:
 
     unsigned get_height();
 
+    unsigned get_tick();
+
     // Simulate one tick.
     void simulate();
 
@@ -71,6 +74,7 @@ public:
 private:
     Random random;
     Config conf;
+    unsigned long long tick;
     Grid<Animal> animal;
     Grid<float> plant;
     Grid<float> herb;

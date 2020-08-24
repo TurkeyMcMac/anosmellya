@@ -70,11 +70,16 @@ The format is the same as for a configuration file.
 ### Statistics
 
 The `-print-stats` option enables statistics to be printed.
-Each tick, a JSON object is printed on a new line of standard output.
+On an interval, a JSON object is printed on a new line of standard output.
+The default interval is once per 10 ticks.
+(This can be changed with `-stat-interval`.)
 The fields are as follows:
 
 * `world_width`, `world_height`:
 The width and height of the world in tiles.
+* `tick`:
+The sequential tick number when these statistics were generated, starting at
+zero.
 * `herb_avg`:
 The average stats of an herbivore.
 * `herb_count`:

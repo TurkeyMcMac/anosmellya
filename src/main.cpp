@@ -63,9 +63,15 @@ static void simulate(SDL_Renderer* renderer, Options const& opts)
         }
         if (do_run || do_one_tick) {
             if (do_print_stats) {
-                world.get_statistics(stats);
-                stats.print(stdout);
-                putchar('\n');
+                unsigned tick = world.get_tick();
+                if (tick % opts.stat_interval == 0) {
+                    world.get_statistics(stats);
+                    stats.print(stdout);
+                    putchar('\n');
+                }
+                if (opts.flush_interval && tick % opts.flush_interval == 0) {
+                    fflush(stdout);
+                }
             }
             world.simulate();
         }

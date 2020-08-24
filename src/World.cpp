@@ -15,6 +15,7 @@ World::World(unsigned width, unsigned height, Random const& random,
     Config const& conf, unsigned max_threads)
     : random(random)
     , conf(conf)
+    , tick(0)
     , animal(width, height)
     , plant(width, height, 0.)
     , herb(width, height, 0.)
@@ -84,6 +85,8 @@ World::~World()
 unsigned World::get_width() { return animal.get_width(); }
 
 unsigned World::get_height() { return animal.get_height(); }
+
+unsigned World::get_tick() { return tick; }
 
 static float flow(float a, float b, float portion) { return (b - a) * portion; }
 
@@ -311,6 +314,7 @@ static int worker_proc(void* arg)
 
 void World::simulate()
 {
+    ++tick;
     FluidWorker& plant_worker = workers[0];
     FluidWorker& herb_worker = workers[1];
     FluidWorker& carn_worker = workers[2];
@@ -529,6 +533,7 @@ void World::get_statistics(Statistics& stats)
 {
     stats.world_width = get_width();
     stats.world_height = get_height();
+    stats.tick = tick;
     stats.herb_avg = Animal();
     stats.herb_count = 0;
     stats.carn_avg = Animal();
@@ -565,8 +570,8 @@ void World::get_statistics(Statistics& stats)
 
 void Statistics::print(FILE* to)
 {
-    fprintf(to, "{\"world_width\":%u,\"world_height\":%u", world_width,
-        world_height);
+    fprintf(to, "{\"world_width\":%u,\"world_height\":%u,\"tick\":%llu",
+        world_width, world_height, tick);
     fputs(",\"herb_avg\":", to);
     herb_avg.print(to);
     fprintf(to, ",\"herb_count\":%u", herb_count);

@@ -59,6 +59,10 @@ Options:\n\
  -no-draw                Do not open a window or draw the world.\n\
  -print-stats            Print JSON statistics every tick.\n\
  -no-print-stats         Do not print statistics. This is the default.\n\
+ -stat-interval <int>    Print statistics every <int> ticks if printing is\n\
+                         on. The default is 10.\n\
+ -flush-interval <int>   Flush printed statistics every <int> ticks. The\n\
+                         default is to flush whenever the stdio buffer fills.\n\
  -frame-delay <delay>    Delay for <delay> milliseconds per frame.\n\
  -pixel-size <size>      Set the simulation pixel size in screen pixels.\n\
  -max-threads <threads>  The maximum number of threads used for computation.\n\
@@ -79,6 +83,8 @@ Options::Options(int argc, char* argv[])
     , seed((uint32_t)time(NULL))
     , draw(true)
     , print_stats(false)
+    , stat_interval(10)
+    , flush_interval(0)
     , frame_delay(60)
     , pixel_size(3)
     , max_threads(0)
@@ -118,6 +124,10 @@ Options::Options(int argc, char* argv[])
             print_stats = true;
         } else if (!strcmp(opt, "-no-print-stats")) {
             print_stats = false;
+        } else if (!strcmp(opt, "-stat-interval")) {
+            stat_interval = (unsigned)get_num_arg(argv, i, 1, 10000);
+        } else if (!strcmp(opt, "-flush-interval")) {
+            flush_interval = (unsigned)get_num_arg(argv, i, 1, 10000);
         } else if (!strcmp(opt, "-frame-delay")) {
             frame_delay = (unsigned)get_num_arg(argv, i, 0, 60000);
         } else if (!strcmp(opt, "-pixel-size")) {

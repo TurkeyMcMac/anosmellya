@@ -13,6 +13,8 @@ struct Options {
     uint32_t seed;
     bool draw;
     bool print_stats;
+    unsigned stat_interval;
+    unsigned flush_interval; // 0 means no fflush calls
     unsigned frame_delay;
     int pixel_size;
     unsigned max_threads; // 0 means use the number of CPUs
