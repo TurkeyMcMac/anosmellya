@@ -49,6 +49,11 @@ static void simulate(SDL_Renderer* renderer, Options const& opts)
                     break;
                 case SDLK_s:
                     do_print_stats = !do_print_stats;
+                    if (!do_print_stats) {
+                        // Without this flush, some text might be buffered until
+                        // statistic printing is turned on again.
+                        fflush(stdout);
+                    }
                     break;
                 case SDLK_w:
                     do_wait = !do_wait;
@@ -61,7 +66,6 @@ static void simulate(SDL_Renderer* renderer, Options const& opts)
                 world.get_statistics(stats);
                 stats.print(stdout);
                 putchar('\n');
-                fflush(stdout);
             }
             world.simulate();
         }
