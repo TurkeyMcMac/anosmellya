@@ -6,6 +6,7 @@
 #include "Grid.hpp"
 #include "Random.hpp"
 #include <SDL2/SDL.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <vector>
 
@@ -14,7 +15,7 @@ namespace anosmellya {
 struct Statistics {
     unsigned world_width;
     unsigned world_height;
-    unsigned long long tick;
+    uint64_t tick;
     Animal herb_avg;
     unsigned herb_count;
     Animal carn_avg;
@@ -74,7 +75,7 @@ public:
 private:
     Random random;
     Config conf;
-    unsigned long long tick;
+    uint64_t tick;
     Grid<Animal> animal;
     Grid<float> plant;
     Grid<float> herb;
