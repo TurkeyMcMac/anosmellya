@@ -57,7 +57,7 @@ Options:\n\
  -draw                   Open a window and draw the world every frame.\n\
                          This is the default.\n\
  -no-draw                Do not open a window or draw the world.\n\
- -print-stats            Print JSON statistics every tick.\n\
+ -print-stats            Print JSON statistics periodically.\n\
  -no-print-stats         Do not print statistics. This is the default.\n\
  -stat-interval <int>    Print statistics every <int> ticks if printing is\n\
                          on. The default is 10.\n\
