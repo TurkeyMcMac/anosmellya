@@ -570,7 +570,7 @@ void World::get_statistics(Statistics& stats)
 }
 
 #if _WIN32
-// Work issue caused by Windows' stupid non-compliance:
+// Fix issue caused by Windows' stupid non-compliance:
 #undef PRIu64
 #define PRIu64 "I64u"
 #endif
