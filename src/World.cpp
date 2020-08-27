@@ -1,5 +1,5 @@
 #include "World.hpp"
-#include <inttypes.h>
+#include "platform.hpp"
 #include <limits.h>
 #include <math.h>
 
@@ -569,15 +569,11 @@ void World::get_statistics(Statistics& stats)
     }
 }
 
-#if _WIN32
-// Fix issue caused by Windows' stupid non-compliance:
-#undef PRIu64
-#define PRIu64 "I64u"
-#endif
-
 void Statistics::print(FILE* to)
 {
-    fprintf(to, "{\"world_width\":%u,\"world_height\":%u,\"tick\":%" PRIu64,
+    fprintf(to,
+        "{\"world_width\":%u,\"world_height\":%u,\"tick\":"
+        "%" ANOSMELLYA_UINT64_FMT,
         world_width, world_height, tick);
     fputs(",\"herb_avg\":", to);
     herb_avg.print(to);

@@ -1,6 +1,7 @@
 #include "Config.hpp"
 #include "Options.hpp"
 #include "World.hpp"
+#include "assertions.hpp"
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
