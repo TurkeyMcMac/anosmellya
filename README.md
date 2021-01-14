@@ -18,7 +18,7 @@ Run `make`.
 Run this:
 
 ```
-CXX="$ARCH-g++" PATH="$SDL/$ARCH/bin:$PATH" CXXFLAGS="-I$SDL/$ARCH/include -L$SDL/$ARCH/lib -static" make target=anosmellya.exe libs='`sdl2-config --static-libs`'
+CXX="$ARCH-g++" PATH="$SDL/$ARCH/bin:$PATH" CXXFLAGS="-Wno-pedantic-ms-format -I$SDL/$ARCH/include -L$SDL/$ARCH/lib -static -Wl,--strip-all,--gc-sections" make target=anosmellya.exe libs='`sdl2-config --static-libs`'
 ```
 
 Where the variable `SDL` is set to the path of the directory you unzipped from

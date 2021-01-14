@@ -1,5 +1,5 @@
 target = anosmellya
-flags = `sdl2-config --cflags` -O3 -flto -Wall -Wextra -std=c++11 \
+flags = `sdl2-config --cflags` -O3 -flto -Wall -Wextra -Wpedantic -std=c++11 \
 	-DVERSION=\"`cat version`\" $(CXXFLAGS)
 libs = `sdl2-config --libs`
 
